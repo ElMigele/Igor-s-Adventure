@@ -1,0 +1,958 @@
+fileFormatVersion: 2
+guid: 1c064dc52b9876a49a12cc2001c9db43
+timeCreated: 1535707669
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: weapon_concepts_by_kuroi_tsuki_0
+    21300002: weapon_concepts_by_kuroi_tsuki_1
+    21300004: weapon_concepts_by_kuroi_tsuki_2
+    21300006: weapon_concepts_by_kuroi_tsuki_3
+    21300008: weapon_concepts_by_kuroi_tsuki_4
+    21300010: weapon_concepts_by_kuroi_tsuki_5
+    21300012: weapon_concepts_by_kuroi_tsuki_6
+    21300014: weapon_concepts_by_kuroi_tsuki_7
+    21300016: weapon_concepts_by_kuroi_tsuki_8
+    21300018: weapon_concepts_by_kuroi_tsuki_9
+    21300020: weapon_concepts_by_kuroi_tsuki_10
+    21300022: weapon_concepts_by_kuroi_tsuki_11
+    21300024: weapon_concepts_by_kuroi_tsuki_12
+    21300026: weapon_concepts_by_kuroi_tsuki_13
+    21300028: weapon_concepts_by_kuroi_tsuki_14
+    21300030: weapon_concepts_by_kuroi_tsuki_15
+    21300032: weapon_concepts_by_kuroi_tsuki_16
+    21300034: weapon_concepts_by_kuroi_tsuki_17
+    21300036: weapon_concepts_by_kuroi_tsuki_18
+    21300038: weapon_concepts_by_kuroi_tsuki_19
+    21300040: weapon_concepts_by_kuroi_tsuki_20
+    21300042: weapon_concepts_by_kuroi_tsuki_21
+    21300044: weapon_concepts_by_kuroi_tsuki_22
+    21300046: weapon_concepts_by_kuroi_tsuki_23
+    21300048: weapon_concepts_by_kuroi_tsuki_24
+    21300050: weapon_concepts_by_kuroi_tsuki_25
+    21300052: weapon_concepts_by_kuroi_tsuki_26
+    21300054: weapon_concepts_by_kuroi_tsuki_27
+    21300056: weapon_concepts_by_kuroi_tsuki_28
+    21300058: weapon_concepts_by_kuroi_tsuki_29
+    21300060: weapon_concepts_by_kuroi_tsuki_30
+    21300062: weapon_concepts_by_kuroi_tsuki_31
+    21300064: weapon_concepts_by_kuroi_tsuki_32
+    21300066: weapon_concepts_by_kuroi_tsuki_33
+    21300068: weapon_concepts_by_kuroi_tsuki_34
+    21300070: weapon_concepts_by_kuroi_tsuki_35
+    21300072: weapon_concepts_by_kuroi_tsuki_36
+    21300074: weapon_concepts_by_kuroi_tsuki_37
+    21300076: weapon_concepts_by_kuroi_tsuki_38
+    21300078: weapon_concepts_by_kuroi_tsuki_39
+    21300080: weapon_concepts_by_kuroi_tsuki_40
+    21300082: weapon_concepts_by_kuroi_tsuki_41
+    21300084: weapon_concepts_by_kuroi_tsuki_42
+    21300086: weapon_concepts_by_kuroi_tsuki_43
+    21300088: weapon_concepts_by_kuroi_tsuki_44
+    21300090: weapon_concepts_by_kuroi_tsuki_45
+    21300092: weapon_concepts_by_kuroi_tsuki_46
+    21300094: weapon_concepts_by_kuroi_tsuki_47
+    21300096: weapon_concepts_by_kuroi_tsuki_48
+    21300098: weapon_concepts_by_kuroi_tsuki_49
+    21300100: weapon_concepts_by_kuroi_tsuki_50
+    21300102: weapon_concepts_by_kuroi_tsuki_51
+    21300104: weapon_concepts_by_kuroi_tsuki_52
+    21300106: weapon_concepts_by_kuroi_tsuki_53
+    21300108: weapon_concepts_by_kuroi_tsuki_54
+    21300110: weapon_concepts_by_kuroi_tsuki_55
+    21300112: weapon_concepts_by_kuroi_tsuki_56
+    21300114: weapon_concepts_by_kuroi_tsuki_57
+    21300116: weapon_concepts_by_kuroi_tsuki_58
+    21300118: weapon_concepts_by_kuroi_tsuki_59
+    21300120: weapon_concepts_by_kuroi_tsuki_60
+    21300122: weapon_concepts_by_kuroi_tsuki_61
+    21300124: weapon_concepts_by_kuroi_tsuki_62
+  serializedVersion: 4
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: -1
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: Standalone
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_0
+      rect:
+        serializedVersion: 2
+        x: 30
+        y: 848
+        width: 227
+        height: 80
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_1
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 916
+        width: 221
+        height: 83
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_2
+      rect:
+        serializedVersion: 2
+        x: 273
+        y: 916
+        width: 231
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_3
+      rect:
+        serializedVersion: 2
+        x: 509
+        y: 917
+        width: 228
+        height: 59
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_4
+      rect:
+        serializedVersion: 2
+        x: 756
+        y: 881
+        width: 251
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_5
+      rect:
+        serializedVersion: 2
+        x: 1066
+        y: 905
+        width: 208
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_6
+      rect:
+        serializedVersion: 2
+        x: 25
+        y: 740
+        width: 266
+        height: 132
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_7
+      rect:
+        serializedVersion: 2
+        x: 271
+        y: 860
+        width: 227
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_8
+      rect:
+        serializedVersion: 2
+        x: 509
+        y: 850
+        width: 244
+        height: 61
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_9
+      rect:
+        serializedVersion: 2
+        x: 762
+        y: 845
+        width: 207
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_10
+      rect:
+        serializedVersion: 2
+        x: 1068
+        y: 838
+        width: 188
+        height: 59
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_11
+      rect:
+        serializedVersion: 2
+        x: 283
+        y: 786
+        width: 209
+        height: 68
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_12
+      rect:
+        serializedVersion: 2
+        x: 495
+        y: 778
+        width: 243
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_13
+      rect:
+        serializedVersion: 2
+        x: 764
+        y: 762
+        width: 208
+        height: 59
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_14
+      rect:
+        serializedVersion: 2
+        x: 1064
+        y: 757
+        width: 191
+        height: 95
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_15
+      rect:
+        serializedVersion: 2
+        x: 76
+        y: 701
+        width: 169
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_16
+      rect:
+        serializedVersion: 2
+        x: 284
+        y: 653
+        width: 216
+        height: 116
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_17
+      rect:
+        serializedVersion: 2
+        x: 534
+        y: 697
+        width: 82
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_18
+      rect:
+        serializedVersion: 2
+        x: 628
+        y: 661
+        width: 86
+        height: 106
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_19
+      rect:
+        serializedVersion: 2
+        x: 741
+        y: 672
+        width: 248
+        height: 79
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_20
+      rect:
+        serializedVersion: 2
+        x: 1030
+        y: 678
+        width: 267
+        height: 81
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_21
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 552
+        width: 186
+        height: 81
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_22
+      rect:
+        serializedVersion: 2
+        x: 75
+        y: 627
+        width: 172
+        height: 70
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_23
+      rect:
+        serializedVersion: 2
+        x: 281
+        y: 563
+        width: 211
+        height: 105
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_24
+      rect:
+        serializedVersion: 2
+        x: 529
+        y: 596
+        width: 90
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_25
+      rect:
+        serializedVersion: 2
+        x: 642
+        y: 564
+        width: 64
+        height: 87
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_26
+      rect:
+        serializedVersion: 2
+        x: 742
+        y: 608
+        width: 245
+        height: 56
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_27
+      rect:
+        serializedVersion: 2
+        x: 1029
+        y: 613
+        width: 258
+        height: 63
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_28
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 507
+        width: 126
+        height: 51
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_29
+      rect:
+        serializedVersion: 2
+        x: 273
+        y: 467
+        width: 224
+        height: 103
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_30
+      rect:
+        serializedVersion: 2
+        x: 523
+        y: 484
+        width: 104
+        height: 102
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_31
+      rect:
+        serializedVersion: 2
+        x: 738
+        y: 529
+        width: 258
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_32
+      rect:
+        serializedVersion: 2
+        x: 1035
+        y: 550
+        width: 257
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_33
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 441
+        width: 139
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_34
+      rect:
+        serializedVersion: 2
+        x: 643
+        y: 454
+        width: 67
+        height: 95
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_35
+      rect:
+        serializedVersion: 2
+        x: 731
+        y: 448
+        width: 239
+        height: 81
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_36
+      rect:
+        serializedVersion: 2
+        x: 1006
+        y: 482
+        width: 317
+        height: 59
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_37
+      rect:
+        serializedVersion: 2
+        x: 1010
+        y: 416
+        width: 316
+        height: 84
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_38
+      rect:
+        serializedVersion: 2
+        x: 83
+        y: 393
+        width: 132
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_39
+      rect:
+        serializedVersion: 2
+        x: 247
+        y: 353
+        width: 245
+        height: 98
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_40
+      rect:
+        serializedVersion: 2
+        x: 503
+        y: 389
+        width: 142
+        height: 68
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_41
+      rect:
+        serializedVersion: 2
+        x: 662
+        y: 395
+        width: 46
+        height: 47
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_42
+      rect:
+        serializedVersion: 2
+        x: 728
+        y: 364
+        width: 236
+        height: 105
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_43
+      rect:
+        serializedVersion: 2
+        x: 1008
+        y: 340
+        width: 321
+        height: 73
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_44
+      rect:
+        serializedVersion: 2
+        x: 23
+        y: 285
+        width: 221
+        height: 105
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_45
+      rect:
+        serializedVersion: 2
+        x: 523
+        y: 361
+        width: 121
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_46
+      rect:
+        serializedVersion: 2
+        x: 662
+        y: 332
+        width: 47
+        height: 51
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_47
+      rect:
+        serializedVersion: 2
+        x: 729
+        y: 288
+        width: 247
+        height: 84
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_48
+      rect:
+        serializedVersion: 2
+        x: 225
+        y: 213
+        width: 274
+        height: 115
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_49
+      rect:
+        serializedVersion: 2
+        x: 518
+        y: 319
+        width: 122
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_50
+      rect:
+        serializedVersion: 2
+        x: 996
+        y: 255
+        width: 317
+        height: 73
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_51
+      rect:
+        serializedVersion: 2
+        x: 661
+        y: 273
+        width: 48
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_52
+      rect:
+        serializedVersion: 2
+        x: 737
+        y: 222
+        width: 205
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_53
+      rect:
+        serializedVersion: 2
+        x: 44
+        y: 166
+        width: 171
+        height: 97
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_54
+      rect:
+        serializedVersion: 2
+        x: 225
+        y: 74
+        width: 272
+        height: 125
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_55
+      rect:
+        serializedVersion: 2
+        x: 507
+        y: 196
+        width: 211
+        height: 63
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_56
+      rect:
+        serializedVersion: 2
+        x: 724
+        y: 129
+        width: 229
+        height: 70
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_57
+      rect:
+        serializedVersion: 2
+        x: 1004
+        y: 114
+        width: 312
+        height: 133
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_58
+      rect:
+        serializedVersion: 2
+        x: 34
+        y: 43
+        width: 173
+        height: 99
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_59
+      rect:
+        serializedVersion: 2
+        x: 511
+        y: 121
+        width: 222
+        height: 59
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_60
+      rect:
+        serializedVersion: 2
+        x: 514
+        y: 63
+        width: 196
+        height: 60
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_61
+      rect:
+        serializedVersion: 2
+        x: 737
+        y: 46
+        width: 200
+        height: 69
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: weapon_concepts_by_kuroi_tsuki_62
+      rect:
+        serializedVersion: 2
+        x: 997
+        y: 42
+        width: 313
+        height: 69
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
