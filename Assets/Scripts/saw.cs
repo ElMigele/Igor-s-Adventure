@@ -10,7 +10,7 @@ public class saw : MonoBehaviour
     {
         Unit unit = collider.GetComponent<Unit>();
 
-        if (unit && (unit is Player || unit is MoveableMonster || unit is Vaza))
+        if (unit && (unit is Player || unit is Vaza))
         {
             unit.ReceiveDamage();
         }

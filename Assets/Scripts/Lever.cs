@@ -39,7 +39,7 @@ public class Lever : MonoBehaviour {
     // Функция по изменению статуса объекта на противоположный
     public void ChangeGOStat(GameObject GO)
     {       
-        var time = 5.0f;
+        //var time = 5.0f;
         /* while (time > 0)
          {
              time -= Time.deltaTime;           

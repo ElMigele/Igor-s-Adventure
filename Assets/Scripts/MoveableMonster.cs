@@ -13,6 +13,8 @@ public class MoveableMonster : Monster
     private float dieRate = 0.9f;
     private SpriteRenderer sprite;
     private Rigidbody2D rb2d;
+    private float dazedTime;
+    public float startDazedTime;
 
     protected override void Start()
     {
@@ -22,6 +24,15 @@ public class MoveableMonster : Monster
 
     protected override void Update()
     {
+        if (dazedTime <= 0)
+        {
+            speed = 2.0F;
+        }
+        else
+        {
+            speed = 0F;
+            dazedTime -= Time.deltaTime;
+        }
         Move();
         if (dieCooldown > 0)
         {
@@ -55,20 +66,20 @@ public class MoveableMonster : Monster
         //        speed = 4.0F;
         //    }
         //}
-        Arrow arrow = collider.gameObject.GetComponent<Arrow>();
-        if (arrow)
-        {
-            LivesMonstr--;
-            if (LivesMonstr == 0)
-            {
-                ReceiveDamage();
-            }
-            if (LivesMonstr == 1)
-            {
-                GetComponent<Renderer>().material.color = Color.red;
-                speed = 4.0F;
-            }
-        }
+        //Arrow arrow = collider.gameObject.GetComponent<Arrow>();
+        //if (arrow)
+        //{
+        //    LivesMonstr--;
+        //    if (LivesMonstr == 0)
+        //    {
+        //        ReceiveDamage();
+        //    }
+        //    if (LivesMonstr == 1)
+        //    {
+        //        GetComponent<Renderer>().material.color = Color.red;
+        //        speed = 4.0F;
+        //    }
+        //}
         Unit unit = collider.GetComponent<Unit>();
 
         if (unit && unit is Player)
@@ -78,12 +89,6 @@ public class MoveableMonster : Monster
     }
     public override void ReceiveDamage()
     {
-        if (CanDie)
-        {
-            dieCooldown = dieRate;
-            LivesMonstr--;
-            Debug.Log(LivesMonstr);
-        }
         if (LivesMonstr == 0)
         {
             Destroy(gameObject);
@@ -108,5 +113,11 @@ public class MoveableMonster : Monster
             theScaleMonster.x *= -1;
             transform.localScale = theScaleMonster;
         }
+    }
+    public void TakeDamage(int damage)
+    {
+        dazedTime = startDazedTime;
+        LivesMonstr -= damage;
+        Debug.Log("take daamge");
     }
 }

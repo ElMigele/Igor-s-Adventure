@@ -34,7 +34,6 @@ public class Player : Unit
     public bool isWater = false;
     private bool isWallLeft = false;
     private bool isWallRight = false;
-    private bool CanDamage = false;
     private float groundAngle = 0;
     //радиус определения соприкосновения с землей
     public double vSpeed;
@@ -126,13 +125,11 @@ public class Player : Unit
             box.size = new Vector2(System.Convert.ToSingle(0.14099885), System.Convert.ToSingle(0.4085822));
         }
         if (Input.GetButtonDown("Fire1")) Shoot();
-        if (CanAttack)
-        {
-             DontAttack();
-        }
+        if (Input.GetButtonUp ("Fire1")) DontAttack();
+        
     }
 
-  
+
     private void Update()
     {
         if (shootCooldown > 0)
@@ -171,12 +168,7 @@ public class Player : Unit
     }
     private void Shoot()
     {
-        if ((CanAttack))
-        {
-            shootCooldown = shotingRate;
-            SwordColider.gameObject.SetActive(true);
-            Sword.GetComponent<Renderer>().material.color = Color.green;
-           
+
             if (isFacingRight)
             {
                 Vector3 position = transform.position; position.y += 0.1F; position.x += 0.2F;
@@ -197,12 +189,10 @@ public class Player : Unit
                 theScaleArrow.x *= -1;
                 newArrow.transform.localScale = theScaleArrow;
             }
-        }
+        
     }
     public void DontAttack() // отмена стрельбы 
     {
-        SwordColider.gameObject.SetActive(false);
-        Sword.GetComponent<Renderer>().material.color = Color.white;
         Sword.transform.eulerAngles = new Vector3(0, 0, 270);
     }
     public bool CanAttack

@@ -3,8 +3,6 @@ using System.Collections;
 
 public class Unit : MonoBehaviour
 {
-
-    public GameObject Gold;
     public virtual void ReceiveDamage()
     {
         Die();
