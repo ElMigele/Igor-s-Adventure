@@ -40,7 +40,6 @@ public class Player : Unit
     private BoxCollider2D box;
     private Arrow arrow;
     public GameObject Sword;
-    public GameObject SwordColider;
     //ссылка на слой, представляющий землю
     public LayerMask whatIsGround;
     public Transform RespawnPoint;
@@ -58,7 +57,6 @@ public class Player : Unit
         arrow = Resources.Load<Arrow>("Arrow");
         shootCooldown = 0f;
         dieCooldown = 0f;
-        SwordColider.gameObject.SetActive(false);
         SetCountText();
         LivesText.text = "Lives: " + Lives.ToString();
     }

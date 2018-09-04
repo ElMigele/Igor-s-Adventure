@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Vaza : Unit
 {
+    public float Lives =1; 
     public GameObject Gold;
     void Start()
     {
@@ -12,21 +13,19 @@ public class Vaza : Unit
     void Update()
     {
     }
-    public override void ReceiveDamage()
+
+    public override void TakeDamage(int damage)
     {
-        //Arrow arrow = collider.gameObject.GetComponent<Arrow>();
-
-        //if (arrow)
-        //{
-        //    ReceiveDamage();
-        //}
-        var p = transform.position;
-        int count = Random.Range(0, 2);
-        for (int i = 0; i < count; i++)
-        { 
-         Instantiate(Gold, new Vector3(p.x, p.y, p.z), Quaternion.identity);
-
+        Lives -= damage;
+        if (Lives == 0)
+        {
+            var p = transform.position;
+            int count = Random.Range(0, 2);
+            for (int i = 0; i < count; i++)
+            {
+                Instantiate(Gold, new Vector3(p.x, p.y, p.z), Quaternion.identity);
+            }
+            ReceiveDamage();
         }
-        Destroy(gameObject);
     }
 }

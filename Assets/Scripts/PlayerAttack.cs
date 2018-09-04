@@ -4,30 +4,26 @@ using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour
 {
-
-    private float TimeAttack;
-    public float StartTimeAttack;
+    private float timeAttack;
+    public float startTimeAttack;
 
     public Transform attackPos;
     public LayerMask whatIsEnemies;
     public float attackRange;
     public int damage;
-
-    void Update(){
-        if (TimeAttack <= 0){
-            if (Input.GetButtonDown("Fire1")){
+    public GameObject Sword;
+    void Update() {
+        if (timeAttack <= 0) {
+            if (Input.GetButtonDown("Fire1")) {
                 Collider2D[] enemiesToDamage = Physics2D.OverlapCircleAll(attackPos.position, attackRange, whatIsEnemies);
-                for (int i = 0; i < enemiesToDamage.Length; i++)
-                {
-                    enemiesToDamage[i].GetComponent<MoveableMonster>().TakeDamage(damage);
+                for (int i = 0; i < enemiesToDamage.Length; i++) {
+                    enemiesToDamage[i].GetComponent<Unit>().TakeDamage(damage);
                 }
+            timeAttack = startTimeAttack;
             }
-
-            TimeAttack = StartTimeAttack;
-        }else {
-            TimeAttack -= Time.deltaTime;
+    } else {
+            timeAttack -= Time.deltaTime;
         }
-  
     }
     void OnDrawGizmosSelected()
     {

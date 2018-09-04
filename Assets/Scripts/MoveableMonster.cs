@@ -5,7 +5,7 @@ using System.Linq;
 public class MoveableMonster : Monster
 {
     [SerializeField]
-    private float speed = 2.0F;
+    private float speed;
     public int LivesMonstr = 3;
     private Vector3 direction;
     private bool isFacingRight = true;
@@ -13,7 +13,7 @@ public class MoveableMonster : Monster
     private float dieRate = 0.9f;
     private SpriteRenderer sprite;
     private Rigidbody2D rb2d;
-    private float dazedTime;
+    public float dazedTime;
     public float startDazedTime;
 
     protected override void Start()
@@ -26,11 +26,11 @@ public class MoveableMonster : Monster
     {
         if (dazedTime <= 0)
         {
-            speed = 2.0F;
+            speed = 1;
         }
         else
         {
-            speed = 0F;
+            speed = 0;
             dazedTime -= Time.deltaTime;
         }
         Move();
@@ -87,18 +87,7 @@ public class MoveableMonster : Monster
             unit.ReceiveDamage();
         }
     }
-    public override void ReceiveDamage()
-    {
-        if (LivesMonstr == 0)
-        {
-            Destroy(gameObject);
-        }
-        if (LivesMonstr == 1)
-        {
-            GetComponent<Renderer>().material.color = Color.red;
-            speed = 4.0F;
-        }
-    }
+
     private void Move()
     {
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position + transform.up * 0.5F + transform.right * direction.x * 0.5F, 0.1F);
@@ -114,9 +103,18 @@ public class MoveableMonster : Monster
             transform.localScale = theScaleMonster;
         }
     }
-    public void TakeDamage(int damage)
+    public override void TakeDamage(int damage)
     {
         dazedTime = startDazedTime;
+        if (LivesMonstr == 0)
+        {
+            ReceiveDamage();
+        }
+        if (LivesMonstr == 1)
+        {
+            GetComponent<Renderer>().material.color = Color.red;
+            speed = 4.0F;
+        }
         LivesMonstr -= damage;
         Debug.Log("take daamge");
     }

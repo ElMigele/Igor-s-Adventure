@@ -12,4 +12,8 @@ public class Unit : MonoBehaviour
     {
         Destroy(gameObject);
     }
+    public virtual void TakeDamage(int damage)
+    {
+      
+    }
 }
