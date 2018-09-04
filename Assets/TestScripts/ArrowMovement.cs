@@ -15,11 +15,25 @@ public class ArrowMovement : MonoBehaviour {
     private float colAngle;             // Угловое положение стрелы в момент удара
     private Rigidbody2D m_Rigidbody;
     public float changAngle;           //
+    public enum OwnerType
+    {
+        Enemy,
+        Player
+    }
+    public OwnerType Owner = OwnerType.Player;
     // Use this for initialization
     void Start () {
-        ArcherControl archer = GameObject.FindGameObjectWithTag("Player").GetComponentInChildren<ArcherControl>();
-        InitVelocity = archer.Velocity;
-        archer.Velocity = archer.velDiap.x;
+        if (Owner == OwnerType.Player)
+        {
+            ArcherControl archer = GameObject.FindGameObjectWithTag("Player").GetComponentInChildren<ArcherControl>();
+            InitVelocity = archer.Velocity;
+            archer.Velocity = archer.velDiap.x;
+        }
+        if (Owner == OwnerType.Enemy)
+        {
+            EnemyBehaivor enemy = GameObject.FindGameObjectWithTag("Enemy").GetComponentInChildren<EnemyBehaivor>();
+            InitVelocity = enemy.ArrowVel;
+        }
         startAngle = Mathf.Deg2Rad*transform.eulerAngles.z;
         if (transform.eulerAngles.z > 90)
             changAngle = 90 - (transform.eulerAngles.z - 270);
@@ -48,7 +62,7 @@ public class ArrowMovement : MonoBehaviour {
                 transform.eulerAngles = new Vector3(0, 0, colAngle);
             }
         }
-        Debug.Log("Положение стрелы: " + positionsMassive[0].ToString("0.00"));
+        //Debug.Log("Положение стрелы: " + positionsMassive[0].ToString("0.00"));
     }
 
     public void ArrowRotate()
