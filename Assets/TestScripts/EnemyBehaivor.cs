@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,14 +9,14 @@ public class EnemyBehaivor : MonoBehaviour {
     // В скрипте прописаны варианты поведения врагов - их передвижение и реакция на игрока
     public enum Attack
     {
-        Infighting,
-        Outfighting
+        Infighting,                         // Ближний бой
+        Outfighting                         // Дальний бой
     }
     public enum Behaivour
     {
-        Following,
-        Patroling,
-        Idle
+        Following,                          // Преследование
+        Patroling,                          // Патрулирование
+        Idle                                // Покой
     }
     public Attack AttackType = Attack.Infighting;
     public Behaivour BehaivourType = Behaivour.Idle;
@@ -28,6 +29,10 @@ public class EnemyBehaivor : MonoBehaviour {
     public float AttackDelay = 5;           // Задержка по атаке
     public float AttackTimer = 5;           // Таймер до атаки
     private Vector3 PlayerPos;              // Позиция игрока, необходима для расчета угла стрельбы
+    public Transform[] PatrolPoints;          // Точки обхода для режима патруль
+    public int PointID = 1;
+    public float MinDist = 0.5f;
+    public float objVel = 1;
 	// Use this for initialization
 	void Start () {
 		
@@ -35,12 +40,48 @@ public class EnemyBehaivor : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        Move();
+        Assault();        
+	}
+    private void Move()
+    {
+        if (BehaivourType == Behaivour.Patroling)
+        {
+            if ((PatrolPoints.Length - 1) >= 1)
+            {
+                if (Mathf.Sign(transform.localScale.x) == Mathf.Sign(transform.position.x - PatrolPoints[PointID].position.x))
+                {
+                    transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
+                }
+                if (Vector3.Distance(PatrolPoints[PointID].position, transform.position) > MinDist)
+                {
+                    transform.position = Vector3.MoveTowards(transform.position, PatrolPoints[PointID].position, objVel * Time.deltaTime);
+                }
+                else
+                {
+                    if (PointID < (PatrolPoints.Length - 1))
+                    {
+                        PointID++;
+                    }
+                    else
+                    {
+                        PointID = 0;
+                    }
+                }
+            }
+        }
+    }
+
+
+
+    private void Assault()
+    {
         if (InVisibilityZone)
         {
             // Рукопашный бой с игроком
             if (AttackType == Attack.Infighting)
             {
-
+                
             }
             // Стрельба по игроку
             if (AttackType == Attack.Outfighting)
@@ -53,32 +94,14 @@ public class EnemyBehaivor : MonoBehaviour {
                         angle = -angle;
                     }
                     Instantiate(Arrow, transform.position, Quaternion.Euler(0, 0, angle));
-                    Debug.Log("Кватернион: " + Quaternion.Euler(0, 0, angle) + ", Угол стельбы: " + angle.ToString("0.0"));
+                    // Debug.Log("Кватернион: " + Quaternion.Euler(0, 0, angle) + ", Угол стельбы: " + angle.ToString("0.0"));
                     AttackTimer = 0;
                 }
             }
         }
         AttackTimer += Time.deltaTime;
-	}
-    /*
-    Quaternion toQuaternion(float pitch, float roll, float yaw)
-    {
-        Quaternion q;
-        // Abbreviations for the various angular functions
-        float cy = Mathf.Cos(yaw * 0.5f);
-        float sy = Mathf.Sin(yaw * 0.5f);
-        float cr = Mathf.Cos(roll * 0.5f);
-        float sr = Mathf.Sin(roll * 0.5f);
-        float cp = Mathf.Cos(pitch * 0.5f);
-        float sp = Mathf.Sin(pitch * 0.5f);
-
-        q.w = cy * cr * cp + sy * sr * sp;
-        q.x = cy * sr * cp - sy * cr * sp;
-        q.y = cy * cr * sp + sy * sr * cp;
-        q.z = sy * cr * cp - cy * sr * sp;
-        return q;
     }
-    */
+    
     void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Player")
