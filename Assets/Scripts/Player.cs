@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System;
 
 public class Player : Unit
 {
@@ -38,7 +39,6 @@ public class Player : Unit
     //радиус определения соприкосновения с землей
     public double vSpeed;
     private BoxCollider2D box;
-    private Arrow arrow;
     public GameObject Sword;
     //ссылка на слой, представляющий землю
     public LayerMask whatIsGround;
@@ -49,16 +49,47 @@ public class Player : Unit
     public HealthEnergyBar HE;
     public GameObject[] searchScript;
     public float TimeOff = 3F; // время атаки
+
+    public enum ActiveWeapon
+    {
+        Лук,            // Лук 
+        Меч           // Меч
+    }
+    public ActiveWeapon АктивноeOружие = ActiveWeapon.Меч;    // Активное оружие
+    private PlayerAttack attack;                        // Скрипт на владение мечем
+    private ArcherControl archer;                       // Скрипт на владение луком
+    
     private void Start()
     {
         anim = GetComponent<Animator>();
         rb2d = GetComponent<Rigidbody2D>();
         sprite = GetComponentInChildren<SpriteRenderer>();
-        arrow = Resources.Load<Arrow>("Arrow");
         shootCooldown = 0f;
         dieCooldown = 0f;
         SetCountText();
         LivesText.text = "Lives: " + Lives.ToString();
+
+        attack = gameObject.GetComponent<PlayerAttack>();
+        archer = gameObject.GetComponent<ArcherControl>();
+        ChangeWeapon(АктивноeOружие);        
+    }
+
+    private void ChangeWeapon(ActiveWeapon активноeOружие)
+    {
+        if (АктивноeOружие == ActiveWeapon.Лук)
+        {
+            attack.enabled = false;
+            Sword.SetActive(false);
+            archer.enabled = true;
+            //archer.AimLine.SetActive(true);
+        }
+        if (АктивноeOружие == ActiveWeapon.Меч)
+        {
+            attack.enabled = true;
+            Sword.SetActive(true);
+            archer.enabled = false;
+            archer.AimLine.SetActive(false);
+        }
     }
 
     /// <summary>
@@ -130,6 +161,21 @@ public class Player : Unit
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            bool Change = false;
+            if ((АктивноeOружие == ActiveWeapon.Меч) && (Change == false))
+            {
+                АктивноeOружие = ActiveWeapon.Лук;
+                Change = true;
+            }
+            if ((АктивноeOружие == ActiveWeapon.Лук) && (Change == false))
+            {
+                АктивноeOружие = ActiveWeapon.Меч;
+                Change = true;
+            }
+            ChangeWeapon(АктивноeOружие);
+        }
         if (shootCooldown > 0)
         {
             shootCooldown -= Time.deltaTime;
@@ -170,22 +216,14 @@ public class Player : Unit
             if (isFacingRight)
             {
                 Vector3 position = transform.position; position.y += 0.1F; position.x += 0.2F;
-                Arrow newArrow = Instantiate(arrow, position, arrow.transform.rotation) as Arrow;
-                newArrow.Direction = newArrow.transform.right;
-                Sword.transform.eulerAngles = new Vector3(0, 0, 180);
+               Sword.transform.eulerAngles = new Vector3(0, 0, 180);
                 //Sword.transform.position = position;
             }
             if (!isFacingRight)
             {
                 Vector3 position = transform.position; position.y += 0.1F; position.x -= 0.2F;
-                Arrow newArrow = Instantiate(arrow, position, arrow.transform.rotation) as Arrow;
-                newArrow.Direction = newArrow.transform.right * (sprite.flipX ? 1 : -1);
                 Sword.transform.eulerAngles = new Vector3(0, 0, 0);
                 //Sword.transform.position = position;
-
-                Vector3 theScaleArrow = newArrow.transform.localScale;
-                theScaleArrow.x *= -1;
-                newArrow.transform.localScale = theScaleArrow;
             }
         
     }
@@ -251,7 +289,7 @@ public class Player : Unit
         {
             Player.gameObject.SetActive(false);
             //Add one to the current value of our count variable.
-            count = count + Random.Range(40, 100); ;
+            count = count + UnityEngine.Random.Range(40, 100);
             //Update the currently displayed count by calling the SetCountText function.
             SetCountText();
         }

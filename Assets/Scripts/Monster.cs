@@ -11,12 +11,12 @@ public class Monster : Unit
 
     protected virtual void OnTriggerEnter2D(Collider2D collider)
     { 
-        Arrow arrow = collider.gameObject.GetComponent<Arrow>();
+        /*Arrow arrow = collider.gameObject.GetComponent<Arrow>();
 
         if (arrow)
         {
             ReceiveDamage();
-        }
+        }*/
 
     }
 

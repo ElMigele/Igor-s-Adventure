@@ -19,22 +19,23 @@ public class ArcherControl : MonoBehaviour {
     public Vector2 AimAngleDiap =       // Диапазон минимального и максимального 
                 new Vector2(55, 90);    //          значения угла прицеливания
     private Vector2[] AimPoints;        // Пара точек для определения угла стрельбы
-    public float curAngle;
-    private bool lookRight;
-    private Vector3 Forward;
-    bool ChangeDirection = false;
+    public float curAngle;              // Текущий угол
+    private Vector3 Forward;            // Вектор, смотрящий вперед (нужен для расчета направления прицела)
+    bool ChangeDirection = false;       // Проверка на смену направления
     public Vector2 Len2Vel =
-                new Vector2(1, 11);    // значение, при котором скорость стрелы будет максимальной
+                new Vector2(1, 11);     // значение, при котором скорость стрелы будет максимальной
 
-    void Start () {
+    void Start ()
+    {
         Velocity = velDiap.x;
         Forward = Vector3.right;
     }
 	
 	// Update is called once per frame
-	void Update () {
-        transform.localPosition += new Vector3(Input.GetAxis("Horizontal"), 0, 0) * Time.deltaTime;
-        AimLine.transform.localPosition += new Vector3(Input.GetAxis("Horizontal"), 0, 0) * Time.deltaTime;
+	void Update ()
+    {
+        //transform.localPosition += new Vector3(Input.GetAxis("Horizontal"), 0, 0) * Time.deltaTime;
+        AimLine.transform.localPosition = transform.position;
         if (Input.GetMouseButtonDown(1))
         {// Если идет нажатие пр. кнопки мыши, то генерируются точки для определения направления
             AimPoints = new Vector2[2];
@@ -48,13 +49,6 @@ public class ArcherControl : MonoBehaviour {
             {
                 Forward = -Forward;
             }
-        }
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            /*transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
-            AimLine.transform.localScale = transform.localScale;
-            Forward = -Forward;*/
-            Debug.Log("1: " + AimPoints[0] + ", 2: " + AimPoints[1]);
         }
     }
 
@@ -162,9 +156,6 @@ public class ArcherControl : MonoBehaviour {
             AimLine.gameObject.SetActive(false);
         }
         mouseMotion = Vector2.zero;
-        delayTimer += Time.deltaTime;
-                  
-            
-        }
-
+        delayTimer += Time.deltaTime; 
+    }
 }

@@ -7,11 +7,8 @@ public class Ladder : MonoBehaviour {
 
     public float speed;
     private Rigidbody2D rb;
-    private float inputHorizontal;
-    private float inputVertical;
     public float distance;
     public LayerMask whatIsLadder;
-    private bool isClimbing;
 
     void Start()
     {
@@ -20,28 +17,12 @@ public class Ladder : MonoBehaviour {
 
     void FixedUpdate()
     {
-        inputHorizontal = Input.GetAxisRaw("Horizontal");
-        rb.velocity = new Vector2(inputHorizontal * speed, rb.velocity.y);
-
         RaycastHit2D hitInfo = Physics2D.Raycast(transform.position, Vector2.up, distance, whatIsLadder);
-
+        Debug.DrawRay(transform.position, distance * Vector2.up);
+        
         if (hitInfo.collider != null)
         {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                isClimbing = true;
-            }
-        }
-        else {
-            if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D))
-            {
-                isClimbing = false;
-            }
-        }
-        if (isClimbing = true && hitInfo.collider != null)
-        {
-            inputVertical = Input.GetAxisRaw("Vertical");
-            rb.velocity = new Vector2(rb.velocity.x, inputVertical * speed);
+            rb.velocity = speed * new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
             rb.gravityScale = 0;
         }
         else {

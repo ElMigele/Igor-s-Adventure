@@ -4,17 +4,47 @@ using System.Linq;
 
 public class MoveableMonster : Monster
 {
-    [SerializeField]
-    private float speed;
-    public int LivesMonstr = 3;
-    private Vector3 direction;
-    private bool isFacingRight = true;
-    private float dieCooldown;
-    private float dieRate = 0.9f;
-    private SpriteRenderer sprite;
-    private Rigidbody2D rb2d;
-    public float dazedTime;
-    public float startDazedTime;
+    [Header("Основные параметры")]
+    public float speed = 5;                     // Скорость
+    public int LivesMonstr = 3;             // Количество жизней
+    private Vector3 direction;              // Вектор направления
+    private bool isFacingRight = true;      // Проверка на смотр вправо
+    private float dieCooldown;              // 
+    private float dieRate = 0.9f;           //
+    private SpriteRenderer sprite;          // 
+    private Rigidbody2D rb2d;               // Твердое тело
+    public float dazedTime;                 // Оглушение
+    public float startDazedTime;            // 
+    // Параметры из EnemyBehaivour
+    public enum Attack
+    {
+        Infighting,                         // Ближний бой
+        Outfighting                         // Дальний бой
+    }
+    public enum Behaivour
+    {
+        Following,                          // Преследование
+        Patroling,                          // Патрулирование
+        Idle                                // Покой
+    }
+    public Attack AttackType = Attack.Infighting;
+    public Behaivour BehaivourType = Behaivour.Idle;
+    [Header("Стрельба")]
+    public GameObject Arrow;                // Стрела
+    private bool InVisibilityZone = false;  // Проверка на нахождение в зоне видимости
+    private bool InImpactArea = false;      // Проверка на нахождение в зоне поражения
+    public float ArrowVel = 50;             // Начальная скорость арбалетного болта
+    public float AttackDelay = 5;           // Задержка по атаке
+    public float AttackTimer = 5;           // Таймер до атаки
+    private Vector3 PlayerPos;              // Позиция игрока, необходима для расчета угла стрельбы
+    public Transform[] PatrolPoints;        // Массив точек обхода для режима патруль
+    public int PointID = 1;                 // № точки, к которой идет враг
+    public float MinDist = 0.5f;            // Допустимое расстояние, при котором враг переключается на следующую точку
+
+    public GameObject ImpactZone;
+    public GameObject VisibilityZone;
+
+    private EnemyVisibility EnemyVisibility;// скрипт видимости (Исус прости)
 
     protected override void Start()
     {
@@ -24,6 +54,10 @@ public class MoveableMonster : Monster
 
     protected override void Update()
     {
+        EnemyVisibility = VisibilityZone.GetComponentInChildren<EnemyVisibility>();
+        InVisibilityZone = EnemyVisibility.InVisibilityZone;
+        PlayerPos = EnemyVisibility.PlayerPos;
+
         if (dazedTime <= 0)
         {
             speed = 1;
@@ -34,11 +68,13 @@ public class MoveableMonster : Monster
             dazedTime -= Time.deltaTime;
         }
         Move();
+        Assault();
         if (dieCooldown > 0)
         {
             dieCooldown -= Time.deltaTime;
         }
     }
+
     private bool CanDie
     {
         get
@@ -46,7 +82,7 @@ public class MoveableMonster : Monster
             return dieCooldown <= 0f;
         }
     }
-    protected override void OnTriggerEnter2D(Collider2D collider)
+    /*protected override void OnTriggerEnter2D(Collider2D collider)
     {
         //Sword sword = collider.gameObject.GetComponent<Sword>();
         //if (sword)
@@ -86,23 +122,72 @@ public class MoveableMonster : Monster
         {
             unit.ReceiveDamage();
         }
-    }
+    }*/
 
     private void Move()
     {
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position + transform.up * 0.5F + transform.right * direction.x * 0.5F, 0.1F);
-
-        if (colliders.Length > 0 ) direction *= -1.0F;
-
-        transform.position = Vector3.MoveTowards(transform.position, transform.position + direction, speed * Time.deltaTime);
-
-        if (colliders.Length > 0)
+        if (BehaivourType == Behaivour.Patroling)
         {
-            Vector3 theScaleMonster = transform.localScale;
-            theScaleMonster.x *= -1;
-            transform.localScale = theScaleMonster;
+            if ((PatrolPoints.Length - 1) >= 1)
+            {
+                if (Mathf.Sign(transform.localScale.x) == Mathf.Sign(transform.position.x - PatrolPoints[PointID].position.x))
+                {
+                    transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
+                }
+                if (Vector3.Distance(PatrolPoints[PointID].position, transform.position) > MinDist)
+                {
+                    transform.position = Vector3.MoveTowards(transform.position, PatrolPoints[PointID].position, speed * Time.deltaTime);
+                }
+                else
+                {
+                    if (PointID < (PatrolPoints.Length - 1))
+                    {
+                        PointID++;
+                    }
+                    else
+                    {
+                        PointID = 0;
+                    }
+                }
+            }
+        }
+
+        if (BehaivourType == Behaivour.Following)
+        {
+            if (InVisibilityZone && (Vector3.Distance(PlayerPos, transform.position) > MinDist))
+            {
+                transform.position = Vector3.MoveTowards(transform.position, PlayerPos, speed * Time.deltaTime);
+            }
         }
     }
+
+    private void Assault()
+    {
+        if (EnemyVisibility.InVisibilityZone)
+        {
+            // Рукопашный бой с игроком
+            if (AttackType == Attack.Infighting)
+            {
+
+            }
+            // Стрельба по игроку
+            if (AttackType == Attack.Outfighting)
+            {
+                if (AttackTimer >= AttackDelay)
+                {
+                    float angle = Vector3.Angle(Vector3.right, (-transform.position + EnemyVisibility.PlayerPos));
+                    if ((EnemyVisibility.PlayerPos.y - transform.position.y) < 0)
+                    {
+                        angle = -angle;
+                    }
+                    Instantiate(Arrow, transform.position, Quaternion.Euler(0, 0, angle));
+                    AttackTimer = 0;
+                }
+            }
+        }
+        AttackTimer += Time.deltaTime;
+    }
+
     public override void TakeDamage(int damage)
     {
         dazedTime = startDazedTime;
