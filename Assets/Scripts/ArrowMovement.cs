@@ -46,20 +46,10 @@ public class ArrowMovement : MonoBehaviour {
         OurCollider.isTrigger = true;
 	}
 
-    private void OnCollisionExit2D(Collision2D collision)
+    private void OnTriggerExit2D(Collider2D collider)
     {
         Debug.Log("Я тут!");
-        if (collision.transform.CompareTag("Player"))
-        {
-            OurCollider = gameObject.GetComponentInChildren<Collider2D>();
-            OurCollider.isTrigger = false;
-        }
-
-    }
-    private void OnTriggerExit2D(Collision2D collision)
-    {
-        Debug.Log("Я тут!");
-        if (collision.transform.CompareTag("Player"))
+        if (collider.transform.CompareTag("Player"))
         {
             OurCollider = gameObject.GetComponentInChildren<Collider2D>();
             OurCollider.isTrigger = false;
