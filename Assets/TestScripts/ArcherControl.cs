@@ -34,6 +34,7 @@ public class ArcherControl : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
+        CheckScale();
         //transform.localPosition += new Vector3(Input.GetAxis("Horizontal"), 0, 0) * Time.deltaTime;
         AimLine.transform.localPosition = transform.position;
         if (Input.GetMouseButtonDown(1))
@@ -45,10 +46,15 @@ public class ArcherControl : MonoBehaviour {
         ChargeAndFire();
         if (Input.GetMouseButtonUp(1))
         {
-            if (Mathf.Sign(transform.localScale.x) != Mathf.Sign(Forward.x))
-            {
-                Forward = -Forward;
-            }
+            CheckScale();
+        }
+    }
+
+    private void CheckScale()
+    {
+        if (Mathf.Sign(transform.localScale.x) != Mathf.Sign(Forward.x))
+        {
+            Forward = -Forward;
         }
     }
 

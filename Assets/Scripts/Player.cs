@@ -133,11 +133,8 @@ public class Player : Unit
         }
         //Debug.Log(rb2d.velocity.x);
         //если нажали клавишу для перемещения вправо, а персонаж направлен влево
-        if (moveHorizontal > 0 && !isFacingRight)
+        if (Mathf.Sign(moveHorizontal) != Mathf.Sign(transform.localScale.x))
             //отражаем персонажа вправо
-            Flip();
-        //обратная ситуация. отражаем персонажа влево
-        else if (moveHorizontal < 0 && isFacingRight)
             Flip();
 
         //приседание

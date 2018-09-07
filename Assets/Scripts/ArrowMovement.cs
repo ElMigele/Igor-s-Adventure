@@ -15,6 +15,7 @@ public class ArrowMovement : MonoBehaviour {
     private float colAngle;             // Угловое положение стрелы в момент удара
     private Rigidbody2D m_Rigidbody;
     public float changAngle;           //
+    public Collider2D OurCollider;
     public enum OwnerType
     {
         Enemy,
@@ -41,8 +42,30 @@ public class ArrowMovement : MonoBehaviour {
             changAngle = transform.eulerAngles.z;
         positionsMassive = new Vector2[2];
         isCollision = false;
+        OurCollider = gameObject.GetComponentInChildren<Collider2D>();
+        OurCollider.isTrigger = true;
 	}
 
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        Debug.Log("Я тут!");
+        if (collision.transform.CompareTag("Player"))
+        {
+            OurCollider = gameObject.GetComponentInChildren<Collider2D>();
+            OurCollider.isTrigger = false;
+        }
+
+    }
+    private void OnTriggerExit2D(Collision2D collision)
+    {
+        Debug.Log("Я тут!");
+        if (collision.transform.CompareTag("Player"))
+        {
+            OurCollider = gameObject.GetComponentInChildren<Collider2D>();
+            OurCollider.isTrigger = false;
+        }
+
+    }
     // Update is called once per frame
     void Update()
     {
@@ -89,12 +112,14 @@ public class ArrowMovement : MonoBehaviour {
             {
                 Debug.Log("Мимо!");
             }
-            else if (collision.collider.name.CompareTo("Archer") == 0)
-            {// Отключено
-                Debug.Log("Самоубийство!");
-            }
             isCollision = true;
             destroyTime = timer + destroyDelay;
+            if (collision.collider.tag.CompareTo("Player") == 0)
+            {// Отключено
+                Debug.Log("Самоубийство!");
+                isCollision = false;
+                destroyTime = 0;
+            }
         }
     }
 
