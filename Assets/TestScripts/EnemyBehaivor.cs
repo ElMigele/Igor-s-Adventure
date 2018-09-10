@@ -12,15 +12,24 @@ public class EnemyBehaivor : MonoBehaviour {
         Infighting,                         // Ближний бой
         Outfighting                         // Дальний бой
     }
+    public Attack AttackType = Attack.Infighting;
     public enum Behaivour
     {
         Following,                          // Преследование
         Patroling,                          // Патрулирование
         Idle                                // Покой
     }
-    public Attack AttackType = Attack.Infighting;
     public Behaivour BehaivourType = Behaivour.Idle;
+    public enum Patrol
+    {
+        Cycle,                              // Цикличный обход
+        ForwBack                            // Перебор вперед-назад
+    }
+    public Patrol PatrolType = Patrol.Cycle;
+    public bool MoveUpList = true;         // Проверка на патрулирование вверх по листу (необходимо для патрулирования типа ForBack)
 
+    public GameObject Body;                 // Тело
+    public GameObject PointMassive;         // Предок массива точек
     public GameObject Arrow;                // Стрела
 
     private bool InVisibilityZone = false;  // Проверка на нахождение в зоне видимости
@@ -29,17 +38,29 @@ public class EnemyBehaivor : MonoBehaviour {
     public float AttackDelay = 5;           // Задержка по атаке
     public float AttackTimer = 5;           // Таймер до атаки
     private Vector3 PlayerPos;              // Позиция игрока, необходима для расчета угла стрельбы
-    public Transform[] PatrolPoints;          // Точки обхода для режима патруль
-    public int PointID = 1;
+    public Transform[] PatrolPoints;        // Точки обхода для режима патруль
+    public int PointID = 1;                 // Точка к которой следуем
     public float MinDist = 0.5f;
     public float objVel = 1;
+
 	// Use this for initialization
-	void Start () {
-		
+	void Start ()
+    {
+        if (BehaivourType == Behaivour.Patroling)
+        {
+            int i = PointMassive.GetComponentInChildren<Transform>().childCount;
+            PatrolPoints = new Transform[i];
+            for (int j = 0; j < i; j++)
+            {
+                PatrolPoints[j] = PointMassive.GetComponentInChildren<Transform>().GetChild(j);
+            }
+            Debug.Log(PatrolPoints.Length);
+        }
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update ()
+    {
         Move();
         Assault();        
 	}
@@ -47,28 +68,7 @@ public class EnemyBehaivor : MonoBehaviour {
     {
         if (BehaivourType == Behaivour.Patroling)
         {
-            if ((PatrolPoints.Length - 1) >= 1)
-            {
-                if (Mathf.Sign(transform.localScale.x) == Mathf.Sign(transform.position.x - PatrolPoints[PointID].position.x))
-                {
-                    transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
-                }
-                if (Vector3.Distance(PatrolPoints[PointID].position, transform.position) > MinDist)
-                {
-                    transform.position = Vector3.MoveTowards(transform.position, PatrolPoints[PointID].position, objVel * Time.deltaTime);
-                }
-                else
-                {
-                    if (PointID < (PatrolPoints.Length - 1))
-                    {
-                        PointID++;
-                    }
-                    else
-                    {
-                        PointID = 0;
-                    }
-                }
-            }
+            
         }
     }
 
