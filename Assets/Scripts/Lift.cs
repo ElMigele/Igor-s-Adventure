@@ -8,9 +8,6 @@ public class Lift : MonoBehaviour {
     public Transform DownPosition;
     public float speed;
     public bool LiftIsActive;
-    public bool ParentLift;
-    public bool Motion = true;
-    public bool backMotion = true;
 
     private void Start()
     {
@@ -25,10 +22,7 @@ public class Lift : MonoBehaviour {
             transform.localPosition = Vector3.MoveTowards(transform.position, TopPosition.position, speed * Time.deltaTime);
             if (transform.position == TopPosition.position)
             {
-                if (backMotion)
-                {
-                    i = false;
-                }
+                i = false;
             }
         }
 
@@ -37,17 +31,13 @@ public class Lift : MonoBehaviour {
             transform.localPosition = Vector3.MoveTowards(transform.position, DownPosition.position, speed * Time.deltaTime);
             if (transform.position == DownPosition.position)
             {
-                if (Motion)
-                {
-                    i = true;
-                }
+                i = true;
             }
         }
     }
 
         void OnCollisionEnter2D(Collision2D coll)
         {
-        if (ParentLift)
             coll.transform.parent = transform;
         }
 

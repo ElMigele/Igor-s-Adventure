@@ -18,7 +18,6 @@ public class Player : Unit
     private float dieCooldown;
     private float shotingRate = 0.45f;
     private float dieRate = 0.3f;
-    public int RandomR;
     //ссылка на компонент Transform объекта
     //для определения соприкосновения с землей
     public Transform groundCheck;
@@ -68,8 +67,8 @@ public class Player : Unit
         shootCooldown = 0f;
         dieCooldown = 0f;
         SetCountText();
-        HealthEnergyBar.use.AdjustCurrentEnergy(-150);
         LivesText.text = "Lives: " + Lives.ToString();
+
         attack = gameObject.GetComponent<PlayerAttack>();
         archer = gameObject.GetComponent<ArcherControl>();
         ChangeWeapon(АктивноeOружие);        
@@ -186,13 +185,11 @@ public class Player : Unit
         if (Input.GetKeyDown(KeyCode.R))
         {
             Lives = 100;
-            HealthEnergyBar.use.AdjustCurrentHealth(100);
-            HealthEnergyBar.use.AdjustCurrentEnergy(-150);
+            HE.HPrestart();
             LivesText.text = "Lives: " + Lives.ToString();
             rb2d.position = RespawnPoint.position;
             RSBox.ResetPosition();
         }
-
     }
 
     /// <summary>
@@ -257,9 +254,8 @@ public class Player : Unit
         if (CanDie)
         {
             dieCooldown = dieRate;
-            RandomR = UnityEngine.Random.Range(-10, -25);
-            HealthEnergyBar.use.AdjustCurrentHealth(RandomR); 
-            Lives = Lives + RandomR;
+            HE.HPdown();
+            Lives= Lives + HE.RandomR;
             LivesText.text = "Lives: " + Lives.ToString();
             rb2d.velocity = Vector3.zero;
             rb2d.AddForce(transform.up * 3.5F, ForceMode2D.Impulse);
@@ -267,8 +263,7 @@ public class Player : Unit
         if (Lives < 0)
         {
             Lives = 100;
-            HealthEnergyBar.use.AdjustCurrentEnergy(1);
-            HealthEnergyBar.use.AdjustCurrentHealth(100);
+            HE.HPrestart();
             LivesText.text = "Lives: " + Lives.ToString();
             rb2d.position = RespawnPoint.position;
             RSBox.ResetPosition();
