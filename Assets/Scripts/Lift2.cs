@@ -40,7 +40,7 @@ public class Lift2 : Unit
         if ((collider.gameObject.tag == "Box") || (collider.gameObject.tag == "Player"))
 
         {
-            collider.transform.parent = transform;
+            //collider.transform.SetParent(transform, true);
         }
         
     }
@@ -49,7 +49,7 @@ public class Lift2 : Unit
     {
         if ((collider.gameObject.tag == "Box") || (collider.gameObject.tag == "Player"))
         {
-            collider.transform.parent = null;
+            //collider.transform.SetParent(null);
         }
     }
 }

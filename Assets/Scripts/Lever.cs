@@ -67,7 +67,7 @@ public class Lever : MonoBehaviour {
                     {
                         ProlongTimer += Time.deltaTime;
                         Lift.speed = 1f;
-                        
+
                     }
                     else
                     {
@@ -81,6 +81,7 @@ public class Lever : MonoBehaviour {
                 else
                 {
                     ProlongTimer = 0;
+                    Lift.speed = 0f;
                     //Lift.GetComponent<Rigidbody2D>().gravityScale = 0;
                 }
             }
