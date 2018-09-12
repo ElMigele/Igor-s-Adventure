@@ -43,7 +43,7 @@ public class Lever : MonoBehaviour {
         {
             Timer += Time.deltaTime;
         }
-        //Lift.speed = 0f;
+        Lift.speed = 0f;
     }
 
     public void OnTriggerStay2D(Collider2D coll)
