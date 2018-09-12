@@ -14,7 +14,7 @@ public class ArcherControl : MonoBehaviour {
     public float deltaVel = 10.0f;      // Приращение скорости
     public Vector2 mouseMotion;         // Направление мыши
     public float delay = 5.0f;          // задержка между выстрелами
-    private float delayTimer = 5.0f;    // Счетчик времени между выстрелами
+    public float delayTimer = 5.0f;    // Счетчик времени между выстрелами
     public float mouseSens = 5.0f;      // Чувствиельность мыши
     public Vector2 AimAngleDiap =       // Диапазон минимального и максимального 
                 new Vector2(55, 90);    //          значения угла прицеливания
@@ -24,7 +24,7 @@ public class ArcherControl : MonoBehaviour {
     bool ChangeDirection = false;       // Проверка на смену направления
     public Vector2 Len2Vel =
                 new Vector2(1, 11);     // значение, при котором скорость стрелы будет максимальной
-
+    public HealthEnergyBar HE;
     void Start ()
     {
         Velocity = velDiap.x;
@@ -49,7 +49,10 @@ public class ArcherControl : MonoBehaviour {
             CheckScale();
         }
     }
-
+    void FixedUpdate()
+    {
+ 
+    }
     private void CheckScale()
     {
         if (Mathf.Sign(transform.localScale.x) != Mathf.Sign(Forward.x))
@@ -123,15 +126,19 @@ public class ArcherControl : MonoBehaviour {
             */
             // Стрельба на левой клавише мыши
             bool prepareFire = Input.GetMouseButton(0);
+   
             if (delayTimer >= delay)
             {
                 if (prepareFire)
                 {
                     if (Velocity < velDiap.y)
                     {
+
                         Velocity += deltaVel * Time.deltaTime;
                         Debug.Log("Скорость: " + Velocity);
+                        HealthEnergyBar.use.AdjustCurrentEnergy(Velocity * Time.deltaTime * 15);
                     }
+
                     else
                     {
                         Velocity = velDiap.y;
@@ -141,6 +148,7 @@ public class ArcherControl : MonoBehaviour {
                 {
                     Instantiate(Arrow, AimLine.transform.position, AimLine.transform.rotation);
                     delayTimer = 0;
+                    HealthEnergyBar.use.AdjustCurrentEnergy(-150);
                 }
             }
         }

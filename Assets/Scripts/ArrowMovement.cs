@@ -16,6 +16,7 @@ public class ArrowMovement : MonoBehaviour {
     private Rigidbody2D m_Rigidbody;
     public float changAngle;           //
     public Collider2D OurCollider;
+
     public enum OwnerType
     {
         Enemy,
@@ -92,25 +93,26 @@ public class ArrowMovement : MonoBehaviour {
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (isCollision == false)
-        {            
-            if (collision.collider.name.CompareTo("Target") == 0)
-            {// Попадание в мишень
-                Debug.Log("В яблочко!");
-            }
-            else if (collision.collider.name.CompareTo("Ground") == 0)
-            {
-                Debug.Log("Мимо!");
-            }
-            isCollision = true;
-            destroyTime = timer + destroyDelay;
-            if (collision.collider.tag.CompareTo("Player") == 0)
-            {// Отключено
-                Debug.Log("Самоубийство!");
-                isCollision = false;
-                destroyTime = 0;
-            }
-        }
+
+        //if (isCollision == false)
+        //{
+        //    if (collision.collider.name.CompareTo("Target") == 0)
+        //    {// Попадание в мишень
+        //        Debug.Log("В яблочко!");
+        //    }
+        //    else if (collision.collider.name.CompareTo("Ground") == 0)
+        //    {
+        //        Debug.Log("Мимо!");
+        //    }
+        //    isCollision = true;
+        //    destroyTime = timer + destroyDelay;
+        //    if (collision.collider.tag.CompareTo("Player") == 0)
+        //    {// Отключено
+        //        Debug.Log("Самоубийство!");
+        //        isCollision = false;
+        //        destroyTime = 0;
+        //    }
+        //}
     }
 
     private void ArrowMove()
@@ -122,5 +124,14 @@ public class ArrowMovement : MonoBehaviour {
         float Vy = (InitVelocity * (float)Math.Sin(startAngle) - 9.8f * timer);
         curVelocity = Mathf.Sqrt(Vx * Vx + Vy * Vy);
         positionsMassive[1] = transform.position;
+    }
+    private void OnTriggerEnter2D(Collider2D collider)
+    {
+        Unit unit = collider.GetComponent<Unit>();
+
+        if (unit && (unit is MoveableMonster || unit is Vaza))
+        {
+            unit.ReceiveDamage();
+        }
     }
 }

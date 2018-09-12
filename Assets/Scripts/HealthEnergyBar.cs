@@ -8,7 +8,7 @@ using System.Collections;
 public class HealthEnergyBar : MonoBehaviour {
 
 	[SerializeField] private float maxHealth = 100f;
-	[SerializeField] private float maxEnergy = 100f;
+	[SerializeField] private float maxEnergy = 150f;
 	[SerializeField] private Color healthColor = Color.red;
 	[SerializeField] private Color energyColor = Color.cyan;
 	[SerializeField] private int healthWidth = 5;
@@ -21,7 +21,7 @@ public class HealthEnergyBar : MonoBehaviour {
 	[SerializeField] private Image energyFill;
 	[SerializeField] private bool healthRight;
 	[SerializeField] private bool energyRight;
-    public int RandomR;
+
 	private static float _currentHealth;
 	private static float _currentEnergy;
 	private static HealthEnergyBar _internal;
@@ -62,15 +62,7 @@ public class HealthEnergyBar : MonoBehaviour {
 			AdjustCurrentEnergy(0);
 		}
 	}
-    public void HPdown() // получаемый урон одинаковый от всего
-    {
-        RandomR = Random.Range(-10, -25);
-        HealthEnergyBar.use.AdjustCurrentHealth(RandomR);
-    }
-    public void HPrestart()// восстановление при рестарте
-    {
-        HealthEnergyBar.use.AdjustCurrentHealth(100);
-    }
+
     public void UpdateRectUI()
 	{
 		if(healthRect)

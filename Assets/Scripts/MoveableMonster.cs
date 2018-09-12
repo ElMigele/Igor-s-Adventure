@@ -82,7 +82,7 @@ public class MoveableMonster : Monster
             return dieCooldown <= 0f;
         }
     }
-    /*protected override void OnTriggerEnter2D(Collider2D collider)
+    protected override void OnTriggerEnter2D(Collider2D collider)
     {
         //Sword sword = collider.gameObject.GetComponent<Sword>();
         //if (sword)
@@ -122,7 +122,7 @@ public class MoveableMonster : Monster
         {
             unit.ReceiveDamage();
         }
-    }*/
+    }
 
     private void Move()
     {
@@ -190,6 +190,7 @@ public class MoveableMonster : Monster
 
     public override void TakeDamage(int damage)
     {
+
         dazedTime = startDazedTime;
         if (LivesMonstr == 0)
         {

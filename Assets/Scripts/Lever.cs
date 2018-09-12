@@ -34,15 +34,16 @@ public class Lever : MonoBehaviour {
     public float Timer = 5;                     // Таймер на перезагрузку срабатывания рычага
     public float EnanbleTime = 5;               // Время, через которое рычаг сможет снова сработать
     [Header("Для продолжительного действия")]
-    public float ProlongTime = 1;               // Время, которое нужно взаимодействовать с рычагом
+    public float ProlongTime = 2.5f;               // Время, которое нужно взаимодействовать с рычагом
     public float ProlongTimer = 0;              // Таймер на взаимодействие с рычагом
-
+    public Lift Lift;
     private void Update()
     {
         if (Timer < EnanbleTime)
         {
             Timer += Time.deltaTime;
         }
+        Lift.speed = 0f;
     }
 
     public void OnTriggerStay2D(Collider2D coll)
@@ -55,7 +56,7 @@ public class Lever : MonoBehaviour {
                 {                    
                     ChangeGOStat(DependGO);
                     transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
-                    Timer = 0;                    
+                    Timer = 0;
                 }
             }
             if (Type == LeverType.Prolong)
@@ -65,9 +66,12 @@ public class Lever : MonoBehaviour {
                     if (ProlongTimer < ProlongTime)
                     {
                         ProlongTimer += Time.deltaTime;
+                        Lift.speed = 1f;
+                        
                     }
                     else
                     {
+                        Lift.speed = 0f;
                         ChangeGOStat(DependGO);
                         transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
                         ProlongTimer = 0;
@@ -77,6 +81,7 @@ public class Lever : MonoBehaviour {
                 else
                 {
                     ProlongTimer = 0;
+                    //Lift.GetComponent<Rigidbody2D>().gravityScale = 0;
                 }
             }
         }
