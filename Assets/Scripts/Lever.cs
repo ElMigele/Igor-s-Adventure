@@ -43,7 +43,7 @@ public class Lever : MonoBehaviour {
         {
             Timer += Time.deltaTime;
         }
-        Lift.speed = 0f;
+
     }
 
     public void OnTriggerStay2D(Collider2D coll)
@@ -65,13 +65,10 @@ public class Lever : MonoBehaviour {
                 {                    
                     if (ProlongTimer < ProlongTime)
                     {
-                        ProlongTimer += Time.deltaTime;
-                        Lift.speed = 1f;
-                        
+                        ProlongTimer += Time.deltaTime;            
                     }
                     else
                     {
-                        Lift.speed = 0f;
                         ChangeGOStat(DependGO);
                         transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
                         ProlongTimer = 0;

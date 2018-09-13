@@ -1,12 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Linq;
+using UnityEngine.UI;
 
 public class MoveableMonster : Monster
 {
     [Header("Основные параметры")]
     public float speed = 5;                     // Скорость
-    public int LivesMonstr = 3;             // Количество жизней
+    public int currentHP = 3;             // Количество жизней
+    public int MaxHP = 3;             // Количество жизней
     private Vector3 direction;              // Вектор направления
     private bool isFacingRight = true;      // Проверка на смотр вправо
     private float dieCooldown;              // 
@@ -15,6 +17,12 @@ public class MoveableMonster : Monster
     private Rigidbody2D rb2d;               // Твердое тело
     public float dazedTime;                 // Оглушение
     public float startDazedTime;            // 
+    public Canvas MyGUI; // UI на котором будем отображать  
+    public Slider EnemyHP; // полоска здоровья врага на экране
+    public Transform metka;
+    public Camera Mycamera;
+
+    Slider ShowHP;
     // Параметры из EnemyBehaivour
     public enum Attack
     {
@@ -50,6 +58,14 @@ public class MoveableMonster : Monster
     {
         dieCooldown = 0f;
         direction = transform.right;
+
+        // создаем новый слайдер на основе эталона
+        ShowHP = (Slider)Instantiate(EnemyHP);
+        //Объявляем что он будет расположен в canvas
+        ShowHP.transform.SetParent(MyGUI.transform, true);
+        currentHP = MaxHP;
+        ShowHP.maxValue = MaxHP;
+        ShowHP.value = currentHP;
     }
 
     protected override void Update()
@@ -72,6 +88,15 @@ public class MoveableMonster : Monster
         if (dieCooldown > 0)
         {
             dieCooldown -= Time.deltaTime;
+        }
+        if (ShowHP != null)
+        {
+            // получаем экранные координаты расположения врага
+            Vector3 screenPos = metka.transform.position;
+            // задаем координаты расположения хп
+            ShowHP.transform.position = screenPos;
+            // показываем текущие здоровье на полосе хп
+            ShowHP.value = currentHP;
         }
     }
 
@@ -192,16 +217,16 @@ public class MoveableMonster : Monster
     {
 
         dazedTime = startDazedTime;
-        if (LivesMonstr == 0)
+        if (currentHP == 0)
         {
             ReceiveDamage();
+            Destroy(EnemyHP);
         }
-        if (LivesMonstr == 1)
+        if (currentHP == 1)
         {
             GetComponent<Renderer>().material.color = Color.red;
             speed = 4.0F;
         }
-        LivesMonstr -= damage;
-        Debug.Log("take daamge");
+        currentHP -= damage;
     }
 }
