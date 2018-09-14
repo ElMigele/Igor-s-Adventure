@@ -134,7 +134,7 @@ public class Player : Unit
         }
         //Debug.Log(rb2d.velocity.x);
         //если нажали клавишу для перемещения вправо, а персонаж направлен влево
-        if (Mathf.Sign(moveHorizontal) != Mathf.Sign(transform.localScale.x))
+        if ((moveHorizontal != 0) && (Mathf.Sign(moveHorizontal) != Mathf.Sign(transform.localScale.x)))
             //отражаем персонажа вправо
             Flip();
 
@@ -200,36 +200,30 @@ public class Player : Unit
     /// </summary>
     private void Flip()
     {
-        //меняем направление движения персонажа
-        isFacingRight = !isFacingRight;
-        //получаем размеры персонажа
-        Vector3 theScale = transform.localScale;
-        //зеркально отражаем персонажа по оси Х
-        theScale.x *= -1;
         //задаем новый размер персонажа, равный старому, но зеркально отраженный
-        transform.localScale = theScale;
-        Sword.transform.localScale = new Vector3(-Sword.transform.localScale.x, -Sword.transform.localScale.y, Sword.transform.localScale.z);
+        transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
     }
     private void Shoot()
     {
-
-            if (isFacingRight)
-            {
-                Vector3 position = transform.position; position.y += 0.1F; position.x += 0.2F;
-               Sword.transform.eulerAngles = new Vector3(0, 0, 180);
-                //Sword.transform.position = position;
-            }
-            if (!isFacingRight)
-            {
-                Vector3 position = transform.position; position.y += 0.1F; position.x -= 0.2F;
-                Sword.transform.eulerAngles = new Vector3(0, 0, 0);
-                //Sword.transform.position = position;
-            }
-        
+        if (Mathf.Sign(transform.localScale.x) > 0)
+        {            
+            Sword.transform.eulerAngles = new Vector3(0, 0, 180);
+            /*Vector3 position = transform.position; position.y += 0.1F; position.x += 0.2F;
+            Sword.transform.position = position;*/
+        }
+        else
+        {            
+            Sword.transform.eulerAngles = new Vector3(0, 0, 90);
+            /*Vector3 position = transform.position; position.y += 0.1F; position.x -= 0.2F;
+            Sword.transform.position = position;*/
+        }
     }
     public void DontAttack() // отмена стрельбы 
     {
-        Sword.transform.eulerAngles = new Vector3(0, 0, 270);
+        if (Mathf.Sign(transform.localScale.x) > 0)
+            Sword.transform.eulerAngles = new Vector3(0, 0, 270);
+        else
+            Sword.transform.eulerAngles = new Vector3(0, 0, 180);
     }
     public bool CanAttack
     {

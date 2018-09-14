@@ -6,10 +6,13 @@ public class DoorPlatform : MonoBehaviour {
 
     [Header("Массив объектов управления")]
     public GameObject[] ButtonControl;  // Массив объектов управления
+    [HideInInspector]
     public Button[] Owner;              // Массив скриптов объектов управления
     [Header("Массив точек перемещения")]
     public GameObject PointParent;      // Предок массива точек
+    [HideInInspector]
     public Transform[] PointMassive;    // Массив позиций точек
+    [HideInInspector]
     public float[] PointDelayMassive;   // Массив времен задержки на точках
     [Header("Параметры")]
     public GameObject Door;             // Объект, который будет перемещаться
@@ -19,8 +22,11 @@ public class DoorPlatform : MonoBehaviour {
         CycleMove                       // Движение циклично
     }
     public MoveType Motion;             // Выбранный тип перемещения объекта
+    [HideInInspector]
     public bool Active;                 // Проверка на активацию всех объектов управления
+    [HideInInspector]
     public int NextPointID = 1;         // ID следующей точки
+    [HideInInspector]
     public int BackPointID = 0;         // ID предыдущей точки
     [Range(0.1f, 100)]
     public float NextSpeed = 1;         // Скорость при движении к следующей точке 
