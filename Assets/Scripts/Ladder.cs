@@ -7,7 +7,7 @@ public class Ladder : MonoBehaviour {
 
     public float speed;
     private Rigidbody2D rb;
-    public float distance;
+    public float distance = 1;
     public LayerMask whatIsLadder;
 
     void Start()

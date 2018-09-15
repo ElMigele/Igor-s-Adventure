@@ -12,7 +12,7 @@ public class MoveableMonster : Monster
     public int MaxHP = 3;                   // Количество жизней
     private Vector3 direction;              // Вектор направления
     private float dieCooldown;              // 
-    private float dieRate = 0.9f;           //
+    private float dieRate = 0.3f;           //
     private SpriteRenderer sprite;          // 
     private Rigidbody2D rb2d;               // Твердое тело
     public float dazedTime;                 // Оглушение
@@ -21,6 +21,7 @@ public class MoveableMonster : Monster
     public Slider EnemyHP;                  // полоска здоровья врага на экране
     public Transform metka;
     public Camera Mycamera;
+    public GameObject BloodsEffect;
 
     Slider ShowHP;
     // Параметры из EnemyBehaivour
@@ -38,6 +39,7 @@ public class MoveableMonster : Monster
     }
     public Behaivour BehaivourType = Behaivour.Idle;
     [Header("Стрельба")]
+    public float angle;
     public GameObject Arrow;                // Стрела
     private bool InVisibilityZone = false;  // Проверка на нахождение в зоне видимости
     private bool InImpactArea = false;      // Проверка на нахождение в зоне поражения
@@ -205,40 +207,46 @@ public class MoveableMonster : Monster
             {
                 Unit unit = EnemyImpact.col.GetComponent<Unit>();
 
+                int damage = UnityEngine.Random.Range(10, 25);
                 if (unit && unit is Player)
                 {
-                    unit.ReceiveDamage();
+                    unit.ReceiveDamage(damage);
                 }
             }
             // Стрельба по игроку
             if (AttackType == Attack.Outfighting)
             {
-                float angle = Vector3.Angle(Vector3.right, (-transform.position + EnemyVisibility.PlayerPos));
+                angle = Vector3.Angle(Vector3.right, (-transform.position + EnemyVisibility.PlayerPos));
                 if ((EnemyVisibility.PlayerPos.y - transform.position.y) < 0)
                 {
                     angle = -angle;
                 }
                 Instantiate(Arrow, transform.position, Quaternion.Euler(0, 0, angle));
+                Debug.Log("Ya: " + EnemyVisibility.PlayerPos + " Vrag " + transform.position);
             }
             AttackTimer = 0;
         }
         AttackTimer += Time.deltaTime;
     }
-
-    public override void TakeDamage(int damage)
+    public override void ReceiveDamage(int damage)
     {
-
-        dazedTime = startDazedTime;
+        if (CanDie)
+        {
+            dieCooldown = dieRate;
+            dazedTime = startDazedTime;
+            currentHP -= damage;
+            var p = transform.position;
+            Instantiate(BloodsEffect, new Vector3(p.x, p.y, p.z), Quaternion.identity);
+        }
         if (currentHP == 0)
         {
-            ReceiveDamage();
-            Destroy(EnemyHP);
+            Die();
+            ShowHP.transform.SetParent(transform, true);
         }
         if (currentHP == 1)
         {
             GetComponent<Renderer>().material.color = Color.red;
             speed = 4.0F;
         }
-        currentHP -= damage;
     }
 }

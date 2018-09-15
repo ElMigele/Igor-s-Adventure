@@ -115,7 +115,8 @@ public class ArrowMovement : MonoBehaviour {
             Unit unit = collider.GetComponent<Unit>();
             if (unit && (unit is Player || unit is Vaza))
             {
-                unit.ReceiveDamage();
+                int damage = UnityEngine.Random.Range(10, 25);
+                unit.ReceiveDamage(damage);
                 Destroy(gameObject);
             }
         }
@@ -124,8 +125,10 @@ public class ArrowMovement : MonoBehaviour {
         {
             Unit unit = collider.GetComponent<Unit>();
             if (unit && (unit is MoveableMonster || unit is Vaza))
+
             {
-                unit.ReceiveDamage();
+                int damage = 1;
+                unit.ReceiveDamage(damage);
                 Destroy(gameObject);
             }
         }

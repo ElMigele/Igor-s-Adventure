@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Unit : MonoBehaviour
 {
-    public virtual void ReceiveDamage()
+    public virtual void ReceiveDamage(int damage)
     {
         Die();
     }
@@ -11,9 +11,5 @@ public class Unit : MonoBehaviour
     protected virtual void Die()
     {
         Destroy(gameObject);
-    }
-    public virtual void TakeDamage(int damage)
-    {
-      
     }
 }

@@ -9,7 +9,7 @@ public class Pit : MonoBehaviour
 
         if (unit && unit is Player)
         {
-            unit.ReceiveDamage();
+            unit.ReceiveDamage(25);
         }
     }
 }

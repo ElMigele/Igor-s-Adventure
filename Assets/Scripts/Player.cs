@@ -44,6 +44,7 @@ public class Player : Unit
     //ссылка на слой, представляющий землю
     public LayerMask whatIsGround;
     public Transform RespawnPoint;
+    public GameObject BloodsEffect;
 
     public ResetState RSVaz;
     public ResetState RSBox;
@@ -246,19 +247,20 @@ public class Player : Unit
         //прикладываем силу вверх, чтобы персонаж подпрыгнул
         rb2d.AddForce(new Vector2(0, 220));
     }
-    public override void ReceiveDamage()
+    public override void ReceiveDamage(int damage)
     {
         if (CanDie)
         {
-            dieCooldown = dieRate;
-            RandomR = UnityEngine.Random.Range(-10, -25);
-            HealthEnergyBar.use.AdjustCurrentHealth(RandomR); 
-            Lives = Lives + RandomR;
+            dieCooldown = dieRate;    
+            HealthEnergyBar.use.AdjustCurrentHealth(-damage); 
+            Lives = Lives - damage;
             LivesText.text = "Lives: " + Lives.ToString();
             rb2d.velocity = Vector3.zero;
             rb2d.AddForce(transform.up * 3.5F, ForceMode2D.Impulse);
+            var p = transform.position;
+            Instantiate(BloodsEffect, new Vector3(p.x, p.y, p.z), Quaternion.identity);
         }
-        if (Lives < 0)
+        if (Lives < 1)
         {
             Lives = 100;
             HealthEnergyBar.use.AdjustCurrentEnergy(1);

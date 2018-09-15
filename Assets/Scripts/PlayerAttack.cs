@@ -10,9 +10,7 @@ public class PlayerAttack : MonoBehaviour
     public Transform attackPos;
     public LayerMask whatIsEnemies;
     public float attackRange;
-    public int damage;
-    public GameObject Sword;
-
+    public int damage = 1;
     void Update()
     {
         if (timeAttack <= 0)
@@ -22,7 +20,7 @@ public class PlayerAttack : MonoBehaviour
                 Collider2D[] enemiesToDamage = Physics2D.OverlapCircleAll(attackPos.position, attackRange, whatIsEnemies);
                 for (int i = 0; i < enemiesToDamage.Length; i++)
                 {
-                    enemiesToDamage[i].GetComponent<Unit>().TakeDamage(damage);
+                    enemiesToDamage[i].GetComponent<Unit>().ReceiveDamage(damage); 
                 }
             timeAttack = startTimeAttack;
             }

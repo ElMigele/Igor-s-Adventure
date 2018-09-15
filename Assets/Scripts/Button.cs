@@ -27,8 +27,7 @@ public class Button : MonoBehaviour {
     }
     public HowWork WorkType = HowWork.OnlyPress;
     public float ActiveTime = 5;
-    public Transform Points0;
-    public Transform Points1;
+    public Sprite[] sprites = new Sprite[2];
     [Header("Управляемые объекты")]
     public GameObject[] DependObjects;
     [Header("Нерегулируемые параметры")]
@@ -38,7 +37,7 @@ public class Button : MonoBehaviour {
     void Start ()
     {
         Timer = ActiveTime;
-	}
+    }
 	
 	// Update is called once per frame
 	void Update ()
@@ -284,11 +283,11 @@ public class Button : MonoBehaviour {
     {
         if (Active)
         {
-            transform.position = Points1.position;
+            gameObject.GetComponent<SpriteRenderer>().sprite = sprites[0];
         }
         else
         {
-            transform.position = Points0.position;
+            gameObject.GetComponent<SpriteRenderer>().sprite = sprites[1];
         }
     }
 }

@@ -7,6 +7,7 @@ public class sawMove : MonoBehaviour
     public Transform LeftPosition;
     public Transform RightPosition;
     public float speed;
+    public int damage = 1;
 
     private void Start()
     {
@@ -39,7 +40,7 @@ public class sawMove : MonoBehaviour
 
         if (unit && unit is Player)
         {
-            unit.ReceiveDamage();
+            unit.ReceiveDamage(damage);
         }
     }
 
