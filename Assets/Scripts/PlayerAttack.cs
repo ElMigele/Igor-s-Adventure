@@ -12,19 +12,27 @@ public class PlayerAttack : MonoBehaviour
     public float attackRange;
     public int damage;
     public GameObject Sword;
-    void Update() {
-        if (timeAttack <= 0) {
-            if (Input.GetButtonDown("Fire1")) {
+
+    void Update()
+    {
+        if (timeAttack <= 0)
+        {
+            if (Input.GetButtonDown("Fire1"))
+            {
                 Collider2D[] enemiesToDamage = Physics2D.OverlapCircleAll(attackPos.position, attackRange, whatIsEnemies);
-                for (int i = 0; i < enemiesToDamage.Length; i++) {
+                for (int i = 0; i < enemiesToDamage.Length; i++)
+                {
                     enemiesToDamage[i].GetComponent<Unit>().TakeDamage(damage);
                 }
             timeAttack = startTimeAttack;
             }
-    } else {
+        }
+        else
+        {
             timeAttack -= Time.deltaTime;
         }
     }
+
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;

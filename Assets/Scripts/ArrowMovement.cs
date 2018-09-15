@@ -13,30 +13,32 @@ public class ArrowMovement : MonoBehaviour {
     private bool isCollision;           //
     private float destroyTime;          // Время уничтожения стрелы
     private float colAngle;             // Угловое положение стрелы в момент удара
-    private Rigidbody2D m_Rigidbody;
-    public float changAngle;           //
+    public float changAngle;            //
     public Collider2D OurCollider;
 
-    public enum OwnerType
+    public enum Owner
     {
         Enemy,
         Player
     }
-    public OwnerType Owner = OwnerType.Player;
+    public Owner OwnerType = Owner.Player;
+    public GameObject Master;
+
     // Use this for initialization
     void Start () {
-        if (Owner == OwnerType.Player)
-        {
+        MasterSearch();
+        if (OwnerType == Owner.Player)
+        {            
             ArcherControl archer = GameObject.FindGameObjectWithTag("Player").GetComponentInChildren<ArcherControl>();
             InitVelocity = archer.Velocity;
             archer.Velocity = archer.velDiap.x;
         }
-        if (Owner == OwnerType.Enemy)
+        if (OwnerType == Owner.Enemy)
         {
-            EnemyBehaivor enemy = GameObject.FindGameObjectWithTag("Enemy").GetComponentInChildren<EnemyBehaivor>();
+            MoveableMonster enemy = Master.GetComponentInChildren<MoveableMonster>();
             InitVelocity = enemy.ArrowVel;
         }
-        startAngle = Mathf.Deg2Rad*transform.eulerAngles.z;
+        startAngle = Mathf.Deg2Rad * transform.eulerAngles.z;
         if (transform.eulerAngles.z > 90)
             changAngle = 90 - (transform.eulerAngles.z - 270);
         else
@@ -47,16 +49,21 @@ public class ArrowMovement : MonoBehaviour {
         OurCollider.isTrigger = true;
 	}
 
-    private void OnTriggerExit2D(Collider2D collider)
+    private void MasterSearch()
     {
-        Debug.Log("Я тут!");
-        if (collider.transform.CompareTag("Player"))
+        string SearchingTag = OwnerType.ToString();
+        
+        GameObject[] GOMassive = GameObject.FindGameObjectsWithTag(SearchingTag);
+        for (int i = 0; i < GOMassive.Length; i++)
         {
-            OurCollider = gameObject.GetComponentInChildren<Collider2D>();
-            OurCollider.isTrigger = false;
+            if (transform.position == GOMassive[i].transform.position)
+            {
+                Master = GOMassive[i];
+                break;
+            }
         }
-
     }
+        
     // Update is called once per frame
     void Update()
     {
@@ -76,7 +83,6 @@ public class ArrowMovement : MonoBehaviour {
                 transform.eulerAngles = new Vector3(0, 0, colAngle);
             }
         }
-        //Debug.Log("Положение стрелы: " + positionsMassive[0].ToString("0.00"));
     }
 
     public void ArrowRotate()
@@ -91,30 +97,6 @@ public class ArrowMovement : MonoBehaviour {
         colAngle = transform.eulerAngles.z;
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-
-        //if (isCollision == false)
-        //{
-        //    if (collision.collider.name.CompareTo("Target") == 0)
-        //    {// Попадание в мишень
-        //        Debug.Log("В яблочко!");
-        //    }
-        //    else if (collision.collider.name.CompareTo("Ground") == 0)
-        //    {
-        //        Debug.Log("Мимо!");
-        //    }
-        //    isCollision = true;
-        //    destroyTime = timer + destroyDelay;
-        //    if (collision.collider.tag.CompareTo("Player") == 0)
-        //    {// Отключено
-        //        Debug.Log("Самоубийство!");
-        //        isCollision = false;
-        //        destroyTime = 0;
-        //    }
-        //}
-    }
-
     private void ArrowMove()
     {// для полета стрелы используется уравнение равнопеременного движения        
         positionsMassive[0] = transform.position;
@@ -125,13 +107,36 @@ public class ArrowMovement : MonoBehaviour {
         curVelocity = Mathf.Sqrt(Vx * Vx + Vy * Vy);
         positionsMassive[1] = transform.position;
     }
+
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        Unit unit = collider.GetComponent<Unit>();
-
-        if (unit && (unit is MoveableMonster || unit is Vaza))
+        if (OwnerType == Owner.Enemy)
         {
-            unit.ReceiveDamage();
+            Unit unit = collider.GetComponent<Unit>();
+            if (unit && (unit is Player || unit is Vaza))
+            {
+                unit.ReceiveDamage();
+                Destroy(gameObject);
+            }
+        }
+
+        if (OwnerType == Owner.Player)
+        {
+            Unit unit = collider.GetComponent<Unit>();
+            if (unit && (unit is MoveableMonster || unit is Vaza))
+            {
+                unit.ReceiveDamage();
+                Destroy(gameObject);
+            }
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.transform.CompareTag("Ground"))
+        {
+            Destroy(gameObject);
+            Debug.Log("В землю!");
         }
     }
 }

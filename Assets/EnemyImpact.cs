@@ -2,31 +2,35 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyVisibility : MonoBehaviour {
-    public bool InVisibilityZone;
-    public Vector3 PlayerPos;
+public class EnemyImpact : MonoBehaviour
+{
+    public bool InImpactZone;
+    public Collider2D col;
 
     void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Player")
         {
-            InVisibilityZone = true;
-            PlayerPos = collision.transform.position;
+            col = collision;
+            InImpactZone = true;
         }
     }
+
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Player")
         {
-            PlayerPos = collision.transform.position;
+            col = collision;
+            InImpactZone = true;
         }
     }
+
     void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Player")
         {
-            InVisibilityZone = false;
-            PlayerPos = Vector3.zero;
+            col = null;
+            InImpactZone = false;
         }
     }
 }
