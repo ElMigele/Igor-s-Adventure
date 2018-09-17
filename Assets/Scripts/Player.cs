@@ -14,6 +14,7 @@ public class Player : Unit
     //переменная для установки макс. скорости персонажа
     public float maxSpeed = 2f;
     public int Lives = 100;
+    private float acceleration = 100; // ускорение
     private float shootCooldown;
     private float dieCooldown;
     private float shotingRate = 0.45f;
@@ -37,6 +38,7 @@ public class Player : Unit
     private bool isWallLeft = false;
     private bool isWallRight = false;
     private float groundAngle = 0;
+    private Vector3 direction;
     //радиус определения соприкосновения с землей
     public double vSpeed;
     private BoxCollider2D box;
@@ -154,7 +156,15 @@ public class Player : Unit
         }
         if (Input.GetButtonDown("Fire1")) Shoot();
         if (Input.GetButtonUp ("Fire1")) DontAttack();
-        
+
+        if (GrapplingHook.isActive) return;
+
+        rb2d.AddForce(direction * rb2d.mass * maxSpeed * acceleration);
+
+        if (Mathf.Abs(rb2d.velocity.x) > maxSpeed)
+        {
+            rb2d.velocity = new Vector2(Mathf.Sign(rb2d.velocity.x) * maxSpeed, rb2d.velocity.y);
+        }
     }
 
 
