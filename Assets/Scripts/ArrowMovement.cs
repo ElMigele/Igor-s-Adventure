@@ -19,10 +19,17 @@ public class ArrowMovement : MonoBehaviour {
     public enum Owner
     {
         Enemy,
-        Player
+        Player,
+        Cannon
     }
     public Owner OwnerType = Owner.Player;
-    public GameObject Master;
+    private GameObject Master;
+    public enum MovementType
+    {
+        Ballistic,
+        Line
+    }
+    public MovementType Movement = MovementType.Ballistic;
 
     // Use this for initialization
     void Start () {
@@ -37,6 +44,11 @@ public class ArrowMovement : MonoBehaviour {
         {
             MoveableMonster enemy = Master.GetComponentInChildren<MoveableMonster>();
             InitVelocity = enemy.ArrowVel;
+        }
+        if (OwnerType == Owner.Cannon)
+        {
+            BigFuckingGun Gun = Master.GetComponentInChildren<BigFuckingGun>();
+            InitVelocity = Gun.InitVelocity;
         }
         startAngle = Mathf.Deg2Rad * transform.eulerAngles.z;
         if (transform.eulerAngles.z > 90)
@@ -54,12 +66,33 @@ public class ArrowMovement : MonoBehaviour {
         string SearchingTag = OwnerType.ToString();
         
         GameObject[] GOMassive = GameObject.FindGameObjectsWithTag(SearchingTag);
-        for (int i = 0; i < GOMassive.Length; i++)
+        if (OwnerType == Owner.Cannon)
         {
-            if (transform.position == GOMassive[i].transform.position)
+            GameObject[] CannonMassive = GOMassive;
+            for (int i = 0; i < GOMassive.Length; i++)
             {
-                Master = GOMassive[i];
-                break;
+                GOMassive[i] = GameObject.Find("/BFG/CannonFrame/RotationPoint/Cannon");
+                
+            }
+            GOMassive = GameObject.FindGameObjectsWithTag(SearchingTag);
+            for (int i = 0; i < GOMassive.Length; i++)
+            {
+                if (transform.position == CannonMassive[i].transform.position)
+                {
+                    Master = GOMassive[i];
+                    break;
+                }
+            }
+        }
+        else
+        {
+            for (int i = 0; i < GOMassive.Length; i++)
+            {
+                if (transform.position == GOMassive[i].transform.position)
+                {
+                    Master = GOMassive[i];
+                    break;
+                }
             }
         }
     }
@@ -86,26 +119,37 @@ public class ArrowMovement : MonoBehaviour {
     }
 
     public void ArrowRotate()
-    {// Стрела всегда смотрит в направление вектора скорости
-        float angle = Vector3.Angle(Vector3.right, positionsMassive[1] - positionsMassive[0]);
-        if (positionsMassive[1].y < positionsMassive[0].y)
-        {
-            angle = 360 - angle;
+    {
+        if (Movement == MovementType.Ballistic)
+        {// Стрела всегда смотрит в направление вектора скорости
+            float angle = Vector3.Angle(Vector3.right, positionsMassive[1] - positionsMassive[0]);
+            if (positionsMassive[1].y < positionsMassive[0].y)
+            {
+                angle = 360 - angle;
+            }
+            transform.eulerAngles = new Vector3(0, 0, angle);
+            changAngle = angle;
+            colAngle = transform.eulerAngles.z;
         }
-        transform.eulerAngles = new Vector3(0, 0, angle);
-        changAngle = angle;
-        colAngle = transform.eulerAngles.z;
     }
 
     private void ArrowMove()
-    {// для полета стрелы используется уравнение равнопеременного движения        
-        positionsMassive[0] = transform.position;
-        transform.position += new Vector3((InitVelocity * (float)Math.Cos(startAngle) * timer) * Time.deltaTime,
-                                          (InitVelocity * (float)Math.Sin(startAngle) * timer - 9.8f * timer * timer / 2) * Time.deltaTime);
-        float Vx = (InitVelocity * (float)Math.Cos(startAngle));
-        float Vy = (InitVelocity * (float)Math.Sin(startAngle) - 9.8f * timer);
-        curVelocity = Mathf.Sqrt(Vx * Vx + Vy * Vy);
-        positionsMassive[1] = transform.position;
+    {
+        if (Movement == MovementType.Ballistic)
+        {// для полета стрелы используется уравнение равнопеременного движения        
+            positionsMassive[0] = transform.position;
+            transform.position += new Vector3((InitVelocity * (float)Math.Cos(startAngle) * timer) * Time.deltaTime,
+                                              (InitVelocity * (float)Math.Sin(startAngle) * timer - 9.8f * timer * timer / 2) * Time.deltaTime);
+            float Vx = (InitVelocity * (float)Math.Cos(startAngle));
+            float Vy = (InitVelocity * (float)Math.Sin(startAngle) - 9.8f * timer);
+            curVelocity = Mathf.Sqrt(Vx * Vx + Vy * Vy);
+            positionsMassive[1] = transform.position;
+        }
+        if (Movement == MovementType.Line)
+        {
+            transform.position += new Vector3(Mathf.Cos(startAngle), Mathf.Sin(startAngle)) * InitVelocity * Time.deltaTime;
+            curVelocity = InitVelocity;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collider)

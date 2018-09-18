@@ -28,7 +28,7 @@ public class ArcherControl : MonoBehaviour {
     void Start ()
     {
         Velocity = velDiap.x;
-        Forward = Vector3.right;
+        Forward = 3*Vector3.right;
     }
 	
 	// Update is called once per frame
@@ -101,7 +101,7 @@ public class ArcherControl : MonoBehaviour {
                 ChangeDirection = !ChangeDirection;
                 //angle = Vector2.Angle(Forward, AimPoints[1] - AimPoints[0]);
             }
-            Debug.Log("1: " + AimPoints[0] + ", 2: " + AimPoints[1] + ", Угол: " + angle.ToString("0.0") + ", Сторона: " + transform.localScale.x);
+            //Debug.Log("1: " + AimPoints[0] + ", 2: " + AimPoints[1] + ", Угол: " + angle.ToString("0.0") + ", Сторона: " + transform.localScale.x);
             AimLine.transform.eulerAngles = new Vector3(0, 0, angle);
             /*
             // Стрельба на отпускаение правой клавиши
@@ -135,7 +135,7 @@ public class ArcherControl : MonoBehaviour {
                     {
 
                         Velocity += deltaVel * Time.deltaTime;
-                        Debug.Log("Скорость: " + Velocity);
+                        //Debug.Log("Скорость: " + Velocity);
                         HealthEnergyBar.use.AdjustCurrentEnergy(Velocity * Time.deltaTime * 15);
                     }
 
