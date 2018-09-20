@@ -47,6 +47,13 @@ public class Player : Unit
     public LayerMask whatIsGround;
     public Transform RespawnPoint;
     public GameObject BloodsEffect;
+   //переменые для гарпуна
+    public Vector2 ropeHook;
+    public float swingForce = 4f;
+    public bool isSwinging;
+    private float jumpInput;
+    public float jumpSpeed = 3f;
+    private bool isJumping;
 
     public ResetState RSVaz;
     public ResetState RSBox;
@@ -57,12 +64,13 @@ public class Player : Unit
     public enum ActiveWeapon
     {
         Лук,          // Лук 
-        Меч           // Меч
+        Меч,           // Меч
+        //Гарпун         // Гарпун
     }
     public ActiveWeapon АктивноeOружие = ActiveWeapon.Меч;    // Активное оружие
     private PlayerAttack attack;                        // Скрипт на владение мечем
     private ArcherControl archer;                       // Скрипт на владение луком
-    
+    private RopeSystem rope;                       // Скрипт на владение гарпуном
     private void Start()
     {
         anim = GetComponent<Animator>();
@@ -75,6 +83,7 @@ public class Player : Unit
         LivesText.text = "Lives: " + Lives.ToString();
         attack = gameObject.GetComponent<PlayerAttack>();
         archer = gameObject.GetComponent<ArcherControl>();
+        rope = gameObject.GetComponent<RopeSystem>();
         Bow.transform.position = WeaponPoint.transform.position;
         Sword.transform.position = WeaponPoint.transform.position;
         ChangeWeapon(АктивноeOружие);
@@ -85,6 +94,7 @@ public class Player : Unit
         if (АктивноeOружие == ActiveWeapon.Лук)
         {
             attack.enabled = false;
+            //rope.enabled = false;
             Sword.SetActive(false);
             archer.enabled = true;
             Bow.SetActive(true);
@@ -93,11 +103,22 @@ public class Player : Unit
         if (АктивноeOружие == ActiveWeapon.Меч)
         {
             attack.enabled = true;
+            //rope.enabled = false;
             Sword.SetActive(true);
             archer.enabled = false;
             Bow.SetActive(false);
             archer.AimLine.SetActive(false);
         }
+        //if (АктивноeOружие == ActiveWeapon.Гарпун)
+        //{
+        //    rope.enabled = true;
+        //    attack.enabled = false;
+        //    //Garpun.SetActive(true);
+        //    archer.enabled = false;
+        //    Bow.SetActive(false);
+        //    Sword.SetActive(false);
+        //    archer.AimLine.SetActive(false);
+        //}
     }
 
     /// <summary>
@@ -160,6 +181,60 @@ public class Player : Unit
         }
         if (Input.GetButtonDown("Fire1")) Shoot();
         if (Input.GetButtonUp ("Fire1")) DontAttack();
+ //uгарпун
+        if (moveHorizontal < 0f || moveHorizontal > 0f)
+        {
+            anim.SetFloat("Speed", Mathf.Abs(moveHorizontal));
+            if (isSwinging)
+            {
+                anim.SetBool("IsSwinging", true);
+                // 1 - получаем нормализованный вектор направления от игрока к точке крюка
+                var playerToHookDirection = (ropeHook - (Vector2)transform.position).normalized;
+
+                // 2 - Инвертируем направление, чтобы получить перпендикулярное направление
+                Vector2 perpendicularDirection;
+                if (moveHorizontal < 0)
+                {
+                    perpendicularDirection = new Vector2(-playerToHookDirection.y, playerToHookDirection.x);
+                    var leftPerpPos = (Vector2)transform.position - perpendicularDirection * -2f;
+                    Debug.DrawLine(transform.position, leftPerpPos, Color.green, 0f);
+                }
+                else
+                {
+                    perpendicularDirection = new Vector2(playerToHookDirection.y, -playerToHookDirection.x);
+                    var rightPerpPos = (Vector2)transform.position + perpendicularDirection * 2f;
+                    Debug.DrawLine(transform.position, rightPerpPos, Color.green, 0f);
+                }
+
+                var force = perpendicularDirection * swingForce;
+                rb2d.AddForce(force, ForceMode2D.Force);
+            }
+            else
+            {
+                anim.SetBool("IsSwinging", false);
+                if (groundCheck)
+                {
+                    var groundForce = maxSpeed * 2f;
+                    rb2d.AddForce(new Vector2((moveHorizontal * groundForce - rb2d.velocity.x) * groundForce, 0));
+                    rb2d.velocity = new Vector2(rb2d.velocity.x, rb2d.velocity.y);
+                }
+            }
+        }
+        else
+        {
+            anim.SetBool("IsSwinging", false);
+            anim.SetFloat("Speed", 0f);
+        }
+        if (!isSwinging)
+        {
+            if (!groundCheck) return;
+
+            isJumping = jumpInput > 0f;
+            if (isJumping)
+            {
+                rb2d.velocity = new Vector2(rb2d.velocity.x, jumpSpeed);
+            }
+        }
     }
 
 
@@ -178,6 +253,11 @@ public class Player : Unit
                 АктивноeOружие = ActiveWeapon.Меч;
                 Change = true;
             }
+            //if ((АктивноeOружие == ActiveWeapon.Меч) && (Change == false))
+            //{
+            //    АктивноeOружие = ActiveWeapon.Гарпун;
+            //    Change = true;
+            //}
             ChangeWeapon(АктивноeOружие);
         }
         if (shootCooldown > 0)

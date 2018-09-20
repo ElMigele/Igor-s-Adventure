@@ -43,7 +43,7 @@ public class Sword : MonoBehaviour {
     {
         if (col.CompareTag("Player"))
         {
-            if ((Input.GetKey(KeyCode.E)) && (timer >= delayTimer))
+            if ((Input.GetKeyDown(KeyCode.E)) && (timer >= delayTimer))
             {
                 Player player = col.GetComponent<Player>();
                 GameObject OldSword = player.Sword;
