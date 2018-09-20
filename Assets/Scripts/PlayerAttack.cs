@@ -20,7 +20,8 @@ public class PlayerAttack : MonoBehaviour
                 Collider2D[] enemiesToDamage = Physics2D.OverlapCircleAll(attackPos.position, attackRange, whatIsEnemies);
                 for (int i = 0; i < enemiesToDamage.Length; i++)
                 {
-                    enemiesToDamage[i].GetComponent<Unit>().ReceiveDamage(damage); 
+                    Sword WeaponScript = gameObject.GetComponentInParent<Player>().Sword.GetComponent<Sword>();
+                    enemiesToDamage[i].GetComponent<Unit>().ReceiveDamage(WeaponScript.damage); 
                 }
             timeAttack = startTimeAttack;
             }

@@ -38,7 +38,7 @@ public class ArrowMovement : MonoBehaviour {
         {            
             ArcherControl archer = GameObject.FindGameObjectWithTag("Player").GetComponentInChildren<ArcherControl>();
             InitVelocity = archer.Velocity;
-            archer.Velocity = archer.velDiap.x;
+            archer.Velocity = archer.BowScript.minVel;
         }
         if (OwnerType == Owner.Enemy)
         {

@@ -25,9 +25,11 @@ public class ArcherControl : MonoBehaviour {
     public Vector2 Len2Vel =
                 new Vector2(1, 11);     // значение, при котором скорость стрелы будет максимальной
     public HealthEnergyBar HE;
+    public Bow BowScript;
     void Start ()
     {
-        Velocity = velDiap.x;
+        BowScript = gameObject.GetComponentInChildren<Bow>();
+        Velocity = BowScript.minVel;
         Forward = 3*Vector3.right;
     }
 	
@@ -49,10 +51,7 @@ public class ArcherControl : MonoBehaviour {
             CheckScale();
         }
     }
-    void FixedUpdate()
-    {
- 
-    }
+
     private void CheckScale()
     {
         if (Mathf.Sign(transform.localScale.x) != Mathf.Sign(Forward.x))
@@ -131,17 +130,17 @@ public class ArcherControl : MonoBehaviour {
             {
                 if (prepareFire)
                 {
-                    if (Velocity < velDiap.y)
+                    if (Velocity < BowScript.maxVel)
                     {
 
-                        Velocity += deltaVel * Time.deltaTime;
-                        //Debug.Log("Скорость: " + Velocity);
+                        Velocity += BowScript.delVel * Time.deltaTime;
+                        Debug.Log("Скорость: " + Velocity);
                         HealthEnergyBar.use.AdjustCurrentEnergy(Velocity * Time.deltaTime * 15);
                     }
 
                     else
                     {
-                        Velocity = velDiap.y;
+                        Velocity = BowScript.maxVel;
                     }
                 }
                 if (Input.GetMouseButtonUp(0))

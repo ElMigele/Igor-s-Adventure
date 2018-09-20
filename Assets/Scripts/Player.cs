@@ -41,6 +41,8 @@ public class Player : Unit
     public double vSpeed;
     private BoxCollider2D box;
     public GameObject Sword;
+    public GameObject Bow;
+    public GameObject WeaponPoint;
     //ссылка на слой, представляющий землю
     public LayerMask whatIsGround;
     public Transform RespawnPoint;
@@ -54,7 +56,7 @@ public class Player : Unit
 
     public enum ActiveWeapon
     {
-        Лук,            // Лук 
+        Лук,          // Лук 
         Меч           // Меч
     }
     public ActiveWeapon АктивноeOружие = ActiveWeapon.Меч;    // Активное оружие
@@ -73,7 +75,9 @@ public class Player : Unit
         LivesText.text = "Lives: " + Lives.ToString();
         attack = gameObject.GetComponent<PlayerAttack>();
         archer = gameObject.GetComponent<ArcherControl>();
-        ChangeWeapon(АктивноeOружие);        
+        Bow.transform.position = WeaponPoint.transform.position;
+        Sword.transform.position = WeaponPoint.transform.position;
+        ChangeWeapon(АктивноeOружие);
     }
 
     private void ChangeWeapon(ActiveWeapon активноeOружие)
@@ -83,6 +87,7 @@ public class Player : Unit
             attack.enabled = false;
             Sword.SetActive(false);
             archer.enabled = true;
+            Bow.SetActive(true);
             //archer.AimLine.SetActive(true);
         }
         if (АктивноeOружие == ActiveWeapon.Меч)
@@ -90,6 +95,7 @@ public class Player : Unit
             attack.enabled = true;
             Sword.SetActive(true);
             archer.enabled = false;
+            Bow.SetActive(false);
             archer.AimLine.SetActive(false);
         }
     }
@@ -154,8 +160,6 @@ public class Player : Unit
         }
         if (Input.GetButtonDown("Fire1")) Shoot();
         if (Input.GetButtonUp ("Fire1")) DontAttack();
-
-        if (GrapplingHook.isActive) return;
     }
 
 
