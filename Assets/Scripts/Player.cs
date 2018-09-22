@@ -21,7 +21,6 @@ public class Player : Unit
     public int RandomR;
     //ссылка на компонент Transform объекта
     //для определения соприкосновения с землей
-    public Transform groundCheck;
     public Transform wallLeftCheck;
     public Transform wallRightCheck;
     //переменная для определения направления персонажа вправо/влево
@@ -37,6 +36,7 @@ public class Player : Unit
     private bool isWallLeft = false;
     private bool isWallRight = false;
     private float groundAngle = 0;
+    public Transform ground;
     //радиус определения соприкосновения с землей
     public double vSpeed;
     private BoxCollider2D box;
@@ -54,6 +54,7 @@ public class Player : Unit
     private float jumpInput;
     public float jumpSpeed = 3f;
     private bool isJumping;
+    public bool groundCheck;
 
     public ResetState RSVaz;
     public ResetState RSBox;
@@ -128,7 +129,7 @@ public class Player : Unit
     private void FixedUpdate()
     {
         //определяем, на земле ли персонаж
-        isGrounded = Physics2D.OverlapBox(groundCheck.position, new Vector2(System.Convert.ToSingle(0.02), System.Convert.ToSingle(0.25)), groundAngle, whatIsGround);
+        isGrounded = Physics2D.OverlapBox(ground.position, new Vector2(System.Convert.ToSingle(0.02), System.Convert.ToSingle(0.25)), groundAngle, whatIsGround);
         //isWallLeft = Physics2D.OverlapBox(wallLeftCheck.position, new Vector2(System.Convert.ToSingle(1.6), System.Convert.ToSingle(0.05)), groundAngle, whatIsGround);
         //isWallRight = Physics2D.OverlapBox(wallRightCheck.position, new Vector2(System.Convert.ToSingle(1.6), System.Convert.ToSingle(0.05)), groundAngle, whatIsGround);
         isPress = Input.GetKey(KeyCode.S);
@@ -139,33 +140,18 @@ public class Player : Unit
         anim.SetBool("Press", isPress);
         //используем Input.GetAxis для оси Х. метод возвращает значение оси в пределах от -1 до 1.
 
-
         float moveHorizontal = Input.GetAxis("Horizontal");
-
 
         //в компоненте анимаций изменяем значение параметра Speed на значение оси Х.
         //приэтом нам нужен модуль значения
-        anim.SetFloat("Speed", Mathf.Abs(moveHorizontal));
+
         //обращаемся к компоненту персонажа RigidBody2D. задаем ему скорость по оси Х, 
         //равную значению оси Х умноженное на значение макс. скорости
-        if (isWater == false)
-        {
-            rb2d.velocity = new Vector2(moveHorizontal * maxSpeed, rb2d.velocity.y);
-
-        }
-        else
-        {
-            float moveVertical = Input.GetAxis("Vertical");
-            
-            GetComponent<Rigidbody2D>().velocity = new Vector2(moveHorizontal * maxSpeed / 2, moveVertical * maxSpeed/4);
-           
-        }
         //Debug.Log(rb2d.velocity.x);
         //если нажали клавишу для перемещения вправо, а персонаж направлен влево
         if ((moveHorizontal != 0) && (Mathf.Sign(moveHorizontal) != Mathf.Sign(transform.localScale.x)))
             //отражаем персонажа вправо
             Flip();
-
         //приседание
         if (isGrounded && Input.GetKey(KeyCode.S))
         {
@@ -269,6 +255,9 @@ public class Player : Unit
             dieCooldown -= Time.deltaTime;
         }
         if (isGrounded && Input.GetKeyDown(KeyCode.Space)) Jump();
+        moveHorizontal = Input.GetAxis("Horizontal");
+        var halfHeight = transform.GetComponent<SpriteRenderer>().bounds.extents.y;
+        groundCheck = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y - halfHeight - 0.02f), Vector2.down, 0.025f);  
         if (Input.GetKeyDown(KeyCode.R))
         {
             Lives = 100;
@@ -280,7 +269,12 @@ public class Player : Unit
         }
 
     }
-
+    void Awake()
+    {
+        sprite = GetComponent<SpriteRenderer>();
+        rb2d = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>();
+    }
     /// <summary>
     /// Метод для смены направления движения персонажа и его зеркального отражения
     /// </summary>

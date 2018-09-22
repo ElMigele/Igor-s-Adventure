@@ -11,7 +11,7 @@ public class RopeSystem : MonoBehaviour
     public DistanceJoint2D ropeJoint;
     public Transform crosshair;
     public SpriteRenderer crosshairSprite;
-    public Player player;
+    public Player playerMovement;
     private bool ropeAttached;
     private Vector2 playerPosition;
     private List<Vector2> ropePositions = new List<Vector2>();
@@ -22,10 +22,10 @@ public class RopeSystem : MonoBehaviour
     private Dictionary<Vector2, int> wrapPointsLookup = new Dictionary<Vector2, int>();
     private SpriteRenderer ropeHingeAnchorSprite;
 
-    void Awake ()
+    void Awake()
     {
         ropeJoint.enabled = false;
-	    playerPosition = transform.position;
+        playerPosition = transform.position;
         ropeHingeAnchorRb = ropeHingeAnchor.GetComponent<Rigidbody2D>();
         ropeHingeAnchorSprite = ropeHingeAnchor.GetComponent<SpriteRenderer>();
     }
@@ -40,7 +40,7 @@ public class RopeSystem : MonoBehaviour
     {
         // Transform polygoncolliderpoints to world space (default is local)
         var distanceDictionary = polyCollider.points.ToDictionary<Vector2, float, Vector2>(
-            position => Vector2.Distance(hit.point, polyCollider.transform.TransformPoint(position)), 
+            position => Vector2.Distance(hit.point, polyCollider.transform.TransformPoint(position)),
             position => polyCollider.transform.TransformPoint(position));
 
         var orderedDictionary = distanceDictionary.OrderBy(e => e.Key);
@@ -48,8 +48,8 @@ public class RopeSystem : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update ()
-	{
+    void Update()
+    {
         var worldMousePosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0f));
         var facingDirection = worldMousePosition - transform.position;
         var aimAngle = Mathf.Atan2(facingDirection.y, facingDirection.x);
@@ -64,18 +64,18 @@ public class RopeSystem : MonoBehaviour
         if (!ropeAttached)
         {
             SetCrosshairPosition(aimAngle);
-            player.isSwinging = false;
-	    }
-	    else
+            playerMovement.isSwinging = false;
+        }
+        else
         {
-            player.isSwinging = true;
-            player.ropeHook = ropePositions.Last();
+            playerMovement.isSwinging = true;
+            playerMovement.ropeHook = ropePositions.Last();
             crosshairSprite.enabled = false;
 
             // Wrap rope around points of colliders if there are raycast collisions between player position and their closest current wrap around collider / angle point.
-	        if (ropePositions.Count > 0)
-	        {
-	            var lastRopePoint = ropePositions.Last();
+            if (ropePositions.Count > 0)
+            {
+                var lastRopePoint = ropePositions.Last();
                 var playerToCurrentNextHit = Physics2D.Raycast(playerPosition, (lastRopePoint - playerPosition).normalized, Vector2.Distance(playerPosition, lastRopePoint) - 0.1f, ropeLayerMask);
                 if (playerToCurrentNextHit)
                 {
@@ -98,10 +98,11 @@ public class RopeSystem : MonoBehaviour
             }
         }
 
-	    UpdateRopePositions();
+        UpdateRopePositions();
         HandleRopeLength();
         HandleInput(aimDirection);
-	}
+        HandleRopeUnwrap();
+    }
 
     /// <summary>
     /// Handles input within the RopeSystem component
@@ -150,7 +151,7 @@ public class RopeSystem : MonoBehaviour
     {
         ropeJoint.enabled = false;
         ropeAttached = false;
-        player.isSwinging = false;
+        playerMovement.isSwinging = false;
         ropeRenderer.positionCount = 2;
         ropeRenderer.SetPosition(0, transform.position);
         ropeRenderer.SetPosition(1, transform.position);
@@ -206,7 +207,7 @@ public class RopeSystem : MonoBehaviour
                 if (i != ropeRenderer.positionCount - 1) // if not the Last point of line renderer
                 {
                     ropeRenderer.SetPosition(i, ropePositions[i]);
-                    
+
                     // Set the rope anchor to the 2nd to last rope position (where the current hinge/anchor should be) or if only 1 rope position then set that one to anchor point
                     if (i == ropePositions.Count - 1 || ropePositions.Count == 1)
                     {
@@ -250,6 +251,87 @@ public class RopeSystem : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void HandleRopeUnwrap()
+    {
+        if (ropePositions.Count <= 1)
+        {
+            return;
+        }
+
+        // Hinge = next point up from the player position
+        // Anchor = next point up from the Hinge
+        // Hinge Angle = Angle between anchor and hinge
+        // Player Angle = Angle between anchor and player
+
+        // 1
+        var anchorIndex = ropePositions.Count - 2;
+        // 2
+        var hingeIndex = ropePositions.Count - 1;
+        // 3
+        var anchorPosition = ropePositions[anchorIndex];
+        // 4
+        var hingePosition = ropePositions[hingeIndex];
+        // 5
+        var hingeDir = hingePosition - anchorPosition;
+        // 6
+        var hingeAngle = Vector2.Angle(anchorPosition, hingeDir);
+        // 7
+        var playerDir = playerPosition - anchorPosition;
+        // 8
+        var playerAngle = Vector2.Angle(anchorPosition, playerDir);
+
+        if (!wrapPointsLookup.ContainsKey(hingePosition))
+        {
+            Debug.LogError("We were not tracking hingePosition (" + hingePosition + ") in the look up dictionary.");
+            return;
+        }
+
+        if (playerAngle < hingeAngle)
+        {
+            // 1
+            if (wrapPointsLookup[hingePosition] == 1)
+            {
+                UnwrapRopePosition(anchorIndex, hingeIndex);
+                return;
+            }
+
+            // 2
+            wrapPointsLookup[hingePosition] = -1;
+        }
+        else
+        {
+            // 3
+            if (wrapPointsLookup[hingePosition] == -1)
+            {
+                UnwrapRopePosition(anchorIndex, hingeIndex);
+                return;
+            }
+
+            // 4
+            wrapPointsLookup[hingePosition] = 1;
+        }
+    }
+
+    private void UnwrapRopePosition(int anchorIndex, int hingeIndex)
+    {
+        // 1
+        var newAnchorPosition = ropePositions[anchorIndex];
+        wrapPointsLookup.Remove(ropePositions[hingeIndex]);
+        ropePositions.RemoveAt(hingeIndex);
+
+        // 2
+        ropeHingeAnchorRb.transform.position = newAnchorPosition;
+        distanceSet = false;
+
+        // Set new rope distance joint distance for anchor position if not yet set.
+        if (distanceSet)
+        {
+            return;
+        }
+        ropeJoint.distance = Vector2.Distance(transform.position, newAnchorPosition);
+        distanceSet = true;
     }
 
     void OnTriggerStay2D(Collider2D colliderStay)
