@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class DoorPlatform : MonoBehaviour {
-
+    public bool DestroyanbleByRam = false;
     [Header("Массив объектов управления")]
     public GameObject[] ButtonControl;  // Массив объектов управления
     [HideInInspector]
@@ -38,6 +38,14 @@ public class DoorPlatform : MonoBehaviour {
 
 	void Start ()
     {
+        if (DestroyanbleByRam)
+        {
+             Door.GetComponent<DestroyByRam>().enabled = true;
+        }
+        else
+        {
+            Door.GetComponent<DestroyByRam>().enabled = false;
+        }
         SetPoints();
         Owner = new Button[ButtonControl.Length];
         for (int i = 0; i < Owner.Length; i++)
