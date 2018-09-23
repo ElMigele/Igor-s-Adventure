@@ -30,11 +30,11 @@ public class Player : Unit
     private Rigidbody2D rb2d;
     private SpriteRenderer sprite;
     private float moveHorizontal;
-    private bool isGrounded = false;
+    public bool isGrounded = false;
     private bool isPress = false;
-    public bool isWater = false;
-    private bool isWallLeft = false;
-    private bool isWallRight = false;
+    //public bool isWater = false;
+    //private bool isWallLeft = false;
+    //private bool isWallRight = false;
     private float groundAngle = 0;
     public Transform ground;
     //радиус определения соприкосновения с землей
@@ -46,6 +46,8 @@ public class Player : Unit
     //ссылка на слой, представляющий землю
     public LayerMask whatIsGround;
     public Transform RespawnPoint;
+    //Подключаемые эффекты 
+    public GameObject HPRestore;
     public GameObject BloodsEffect;
    //переменые для гарпуна
     public Vector2 ropeHook;
@@ -56,6 +58,8 @@ public class Player : Unit
     private bool isJumping;
     public bool groundCheck;
 
+    //Подключаемые скрипты
+    public RopeSystem Rope;
     public ResetState RSVaz;
     public ResetState RSBox;
     public HealthEnergyBar HE;
@@ -129,7 +133,7 @@ public class Player : Unit
     private void FixedUpdate()
     {
         //определяем, на земле ли персонаж
-        isGrounded = Physics2D.OverlapBox(ground.position, new Vector2(System.Convert.ToSingle(0.02), System.Convert.ToSingle(0.25)), groundAngle, whatIsGround);
+        isGrounded = Physics2D.OverlapBox(ground.position, new Vector2(System.Convert.ToSingle(0.02), System.Convert.ToSingle(0.1)), groundAngle, whatIsGround);
         //isWallLeft = Physics2D.OverlapBox(wallLeftCheck.position, new Vector2(System.Convert.ToSingle(1.6), System.Convert.ToSingle(0.05)), groundAngle, whatIsGround);
         //isWallRight = Physics2D.OverlapBox(wallRightCheck.position, new Vector2(System.Convert.ToSingle(1.6), System.Convert.ToSingle(0.05)), groundAngle, whatIsGround);
         isPress = Input.GetKey(KeyCode.S);
@@ -137,7 +141,7 @@ public class Player : Unit
         anim.SetBool("Ground", isGrounded);
         //устанавливаем в аниматоре значение скорости взлета/падения
         anim.SetFloat("vSpeed", rb2d.velocity.y);
-        anim.SetBool("Press", isPress);
+        anim.SetBool("Press", isPress && !isSwinging && isGrounded);
         //используем Input.GetAxis для оси Х. метод возвращает значение оси в пределах от -1 до 1.
 
         float moveHorizontal = Input.GetAxis("Horizontal");
@@ -153,7 +157,7 @@ public class Player : Unit
             //отражаем персонажа вправо
             Flip();
         //приседание
-        if (isGrounded && Input.GetKey(KeyCode.S))
+        if (isGrounded && Input.GetKey(KeyCode.S) && !isSwinging)
         {
             box = GetComponent<BoxCollider2D>();
             box.size = new Vector2(System.Convert.ToSingle(0.1409988), System.Convert.ToSingle(0.27));
@@ -257,7 +261,8 @@ public class Player : Unit
         if (isGrounded && Input.GetKeyDown(KeyCode.Space)) Jump();
         moveHorizontal = Input.GetAxis("Horizontal");
         var halfHeight = transform.GetComponent<SpriteRenderer>().bounds.extents.y;
-        groundCheck = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y - halfHeight - 0.02f), Vector2.down, 0.025f);  
+        groundCheck = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y - halfHeight - 0.1f), Vector2.down, 0.025f);
+        Debug.DrawRay(new Vector2(transform.position.x, transform.position.y - halfHeight - 0.1f), Vector2.down );
         if (Input.GetKeyDown(KeyCode.R))
         {
             Lives = 100;
@@ -370,17 +375,31 @@ public class Player : Unit
             //Update the currently displayed count by calling the SetCountText function.
             SetCountText();
         }
+        if (Player.gameObject.CompareTag("HealingPotion"))
+            {
+            var p = transform.position;
+            Instantiate(HPRestore, new Vector3(p.x, p.y, p.z), Quaternion.identity);
+            int hp = - 25;
+            Lives = Lives - hp;
+            if (Lives > 76)
+                {
+                Lives = 100;
+                }
+            LivesText.text = "Lives: " + Lives.ToString();
+            Player.gameObject.SetActive(false);
+                HealthEnergyBar.use.AdjustCurrentHealth(- hp);
+        }
     }
     // Вход в воду
     // Если Игорь заходит в воду то активируется движение в воде
-    void OnTriggerEnter2D(Collider2D Player)
-    {
-        if (Player.gameObject.tag == "Water")
-        {
-            isWater = true;
-            print("Igor' come in water");
-        }        
-    }
+    //void OnTriggerEnter2D(Collider2D Player)
+    //{
+    //    if (Player.gameObject.tag == "Water")
+    //    {
+    //        isWater = true;
+    //        print("Igor' come in water");
+    //    }        
+    //}
     // Выход из воды
     // Если Игорь выходит из воды то движение в воде отключается
     // для того чтобы не было проблем с выходом Игоря из воды был добавлен импульс

@@ -187,7 +187,7 @@ public class RopeSystem : MonoBehaviour
         {
             ropeJoint.distance -= Time.deltaTime * climbSpeed;
         }
-        else if (Input.GetAxis("Vertical") < 0f && ropeAttached)
+        else if (Input.GetAxis("Vertical") < 0f && ropeAttached && !playerMovement.isGrounded)
         {
             ropeJoint.distance += Time.deltaTime * climbSpeed;
         }
@@ -336,11 +336,17 @@ public class RopeSystem : MonoBehaviour
 
     void OnTriggerStay2D(Collider2D colliderStay)
     {
-        isColliding = true;
+        if (colliderStay.gameObject.tag == "Ground")
+        {
+            isColliding = true;
+        }
     }
 
     private void OnTriggerExit2D(Collider2D colliderOnExit)
     {
-        isColliding = false;
+        if (colliderOnExit.gameObject.tag == "Ground")
+        {
+            isColliding = false;
+        }
     }
 }
