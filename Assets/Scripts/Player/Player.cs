@@ -6,50 +6,61 @@ using System;
 
 public class Player : Unit
 {
+    [Header("Ссылки на интерфейс")]
+    public Text countText;                          // Количество золота, имеющееся у игрока
+    public Text LivesText;                          // Количество жизней, оставшихся у игрока
+    public HealthEnergyBar HE;                      // Полосы здороья и силы натяжения лука у героя
+    [Header("Параметры игрока")]
+    [Range(0.1f, 5)]public float maxSpeed = 2f;     // Максимальная скорость игрока
+    [Range(1, 100)] public int MaxLives = 100;      // Максимальное количество жизней игрока
+    public int Lives;                               // Количество жизней
+    [NonSerialized]
+    public int count;                               // Счетчик золота
+    public int RandomR;                             // Случайное число
+    [Header("Анимация")]
+    private Animator anim;                          // Анимация
+    private Rigidbody2D rb2d;                       // Твердое тело игрока
+    private SpriteRenderer sprite;                  // Спрайт игрока
+    public double vSpeed;                           // Устанавливаемая скорость взлета и падения для анимации
+    //ссылка на компонент анимаций
+    private float moveHorizontal;
+    [Header("Оружия")]
+    public float TimeOff = 3;                       // Время атаки
+    public GameObject WeaponPoint;                  // Точка, в которой располагается оружие
+    public GameObject Sword;                        // Объект меча
+    public GameObject Bow;                          // Объект лука
+    public enum ActiveWeapon
+    {
+        Лук,          // Лук 
+        Меч,          // Меч
+        Гарпун        // Гарпун
+    }
+    public ActiveWeapon Активное_Оружие;            // Активное оружие
+    private PlayerAttack attack;                    // Скрипт на владение мечем
+    private ArcherControl archer;                   // Скрипт на владение луком
+    private RopeSystem rope;                        // Скрипт на владение гарпуном
 
-    public Text countText;          //Store a reference to the UI Text component which will display the number of pickups collected.
-    public Text LivesText;          // Колинчество жизней, оставшихся у Игоря
-    private int count;
-
-    //переменная для установки макс. скорости персонажа
-    public float maxSpeed = 2f;
-    public int Lives = 100;
     private float shootCooldown;
     private float dieCooldown;
     private float shotingRate = 0.45f;
     private float dieRate = 0.3f;
-    public int RandomR;
-    //ссылка на компонент Transform объекта
-    //для определения соприкосновения с землей
-    public Transform wallLeftCheck;
-    public Transform wallRightCheck;
-    //переменная для определения направления персонажа вправо/влево
-    private bool isFacingRight = true;
-    //ссылка на компонент анимаций
-    private Animator anim;
-    private Rigidbody2D rb2d;
-    private SpriteRenderer sprite;
-    private float moveHorizontal;
-    public bool isGrounded = false;
-    private bool isPress = false;
-    //public bool isWater = false;
-    //private bool isWallLeft = false;
-    //private bool isWallRight = false;
+
+    [Header("Проверки на состояние")]
+    public bool isGrounded = false;                 // Стоит на земле
+    public LayerMask whatIsGround;                  // Cсылка на слой, представляющий землю
+    private bool isPress = false;                   // 
+    //public bool isWater = false;                  // В воде
+
     private float groundAngle = 0;
     public Transform ground;
-    //радиус определения соприкосновения с землей
-    public double vSpeed;
+    
     private BoxCollider2D box;
-    public GameObject Sword;
-    public GameObject Bow;
-    public GameObject WeaponPoint;
-    //ссылка на слой, представляющий землю
-    public LayerMask whatIsGround;
-    public Transform RespawnPoint;
-    //Подключаемые эффекты 
+    
+    public Transform RespawnPoint;                  // Точка респауна
+    [Header("Подключаемые эффекты")]    
     public GameObject HPRestore;
     public GameObject BloodsEffect;
-   //переменые для гарпуна
+    [Header("Переменые для гарпуна")]
     public Vector2 ropeHook;
     public float swingForce = 4f;
     public bool isSwinging;
@@ -58,24 +69,10 @@ public class Player : Unit
     private bool isJumping;
     public bool groundCheck;
 
-    //Подключаемые скрипты
-    public RopeSystem Rope;
+    [Header("Скрипты на восстановление положения объектов")]
     public ResetState RSVaz;
     public ResetState RSBox;
-    public HealthEnergyBar HE;
-    public GameObject[] searchScript;
-    public float TimeOff = 3F; // время атаки
 
-    public enum ActiveWeapon
-    {
-        Лук,          // Лук 
-        Меч,           // Меч
-        //Гарпун         // Гарпун
-    }
-    public ActiveWeapon АктивноeOружие = ActiveWeapon.Меч;    // Активное оружие
-    private PlayerAttack attack;                        // Скрипт на владение мечем
-    private ArcherControl archer;                       // Скрипт на владение луком
-    private RopeSystem rope;                       // Скрипт на владение гарпуном
     private void Start()
     {
         anim = GetComponent<Animator>();
@@ -85,45 +82,45 @@ public class Player : Unit
         dieCooldown = 0f;
         SetCountText();
         HealthEnergyBar.use.AdjustCurrentEnergy(-150);
+        Lives = MaxLives;
         LivesText.text = "Lives: " + Lives.ToString();
         attack = gameObject.GetComponent<PlayerAttack>();
         archer = gameObject.GetComponent<ArcherControl>();
         rope = gameObject.GetComponent<RopeSystem>();
         Bow.transform.position = WeaponPoint.transform.position;
         Sword.transform.position = WeaponPoint.transform.position;
-        ChangeWeapon(АктивноeOружие);
+        ChangeWeapon(Активное_Оружие);
     }
 
     private void ChangeWeapon(ActiveWeapon активноeOружие)
     {
-        if (АктивноeOружие == ActiveWeapon.Лук)
+        if (Активное_Оружие == ActiveWeapon.Лук)
         {
             attack.enabled = false;
-            //rope.enabled = false;
             Sword.SetActive(false);
             archer.enabled = true;
             Bow.SetActive(true);
-            //archer.AimLine.SetActive(true);
+            archer.AimLine.SetActive(true);
+            rope.enabled = false;
         }
-        if (АктивноeOружие == ActiveWeapon.Меч)
+        if (Активное_Оружие == ActiveWeapon.Меч)
         {
             attack.enabled = true;
-            //rope.enabled = false;
             Sword.SetActive(true);
             archer.enabled = false;
             Bow.SetActive(false);
             archer.AimLine.SetActive(false);
+            rope.enabled = false;
         }
-        //if (АктивноeOружие == ActiveWeapon.Гарпун)
-        //{
-        //    rope.enabled = true;
-        //    attack.enabled = false;
-        //    //Garpun.SetActive(true);
-        //    archer.enabled = false;
-        //    Bow.SetActive(false);
-        //    Sword.SetActive(false);
-        //    archer.AimLine.SetActive(false);
-        //}
+        if (Активное_Оружие == ActiveWeapon.Гарпун)
+        {
+            attack.enabled = false;
+            archer.enabled = false;
+            Bow.SetActive(false);
+            Sword.SetActive(false);
+            archer.AimLine.SetActive(false);
+            rope.enabled = true;
+        }
     }
 
     /// <summary>
@@ -226,30 +223,11 @@ public class Player : Unit
             }
         }
     }
-
-
+    
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            bool Change = false;
-            if ((АктивноeOружие == ActiveWeapon.Меч) && (Change == false))
-            {
-                АктивноeOружие = ActiveWeapon.Лук;
-                Change = true;
-            }
-            if ((АктивноeOружие == ActiveWeapon.Лук) && (Change == false))
-            {
-                АктивноeOружие = ActiveWeapon.Меч;
-                Change = true;
-            }
-            //if ((АктивноeOружие == ActiveWeapon.Меч) && (Change == false))
-            //{
-            //    АктивноeOружие = ActiveWeapon.Гарпун;
-            //    Change = true;
-            //}
-            ChangeWeapon(АктивноeOружие);
-        }
+        SelectWeapon();
+        
         if (shootCooldown > 0)
         {
             shootCooldown -= Time.deltaTime;
@@ -265,7 +243,7 @@ public class Player : Unit
         Debug.DrawRay(new Vector2(transform.position.x, transform.position.y - halfHeight - 0.1f), Vector2.down );
         if (Input.GetKeyDown(KeyCode.R))
         {
-            Lives = 100;
+            Lives = MaxLives;
             HealthEnergyBar.use.AdjustCurrentHealth(100);
             HealthEnergyBar.use.AdjustCurrentEnergy(-150);
             LivesText.text = "Lives: " + Lives.ToString();
@@ -274,42 +252,62 @@ public class Player : Unit
         }
 
     }
+
+    private void SelectWeapon()
+    {
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            switch (Активное_Оружие)
+            {
+                case ActiveWeapon.Меч:
+                    Активное_Оружие = ActiveWeapon.Лук;
+                    break;
+                case ActiveWeapon.Лук:
+                    Активное_Оружие = ActiveWeapon.Гарпун;
+                    break;
+                case ActiveWeapon.Гарпун:
+                    Активное_Оружие = ActiveWeapon.Меч;
+                    break;
+            }
+            ChangeWeapon(Активное_Оружие);
+        }
+    }
+
     void Awake()
     {
         sprite = GetComponent<SpriteRenderer>();
         rb2d = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
     }
+
     /// <summary>
     /// Метод для смены направления движения персонажа и его зеркального отражения
     /// </summary>
     private void Flip()
     {
-        //задаем новый размер персонажа, равный старому, но зеркально отраженный
         transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
     }
+
     private void Shoot()
     {
         if (Mathf.Sign(transform.localScale.x) > 0)
         {            
             Sword.transform.eulerAngles = new Vector3(0, 0, 180);
-            /*Vector3 position = transform.position; position.y += 0.1F; position.x += 0.2F;
-            Sword.transform.position = position;*/
         }
         else
         {            
             Sword.transform.eulerAngles = new Vector3(0, 0, 90);
-            /*Vector3 position = transform.position; position.y += 0.1F; position.x -= 0.2F;
-            Sword.transform.position = position;*/
         }
     }
-    public void DontAttack() // отмена стрельбы 
+
+    public void DontAttack() 
     {
         if (Mathf.Sign(transform.localScale.x) > 0)
             Sword.transform.eulerAngles = new Vector3(0, 0, 270);
         else
             Sword.transform.eulerAngles = new Vector3(0, 0, 180);
     }
+
     public bool CanAttack
     {
         get
@@ -317,6 +315,7 @@ public class Player : Unit
             return shootCooldown <= 0f;
         }
     }
+
     private bool CanDie
     {
         get
@@ -324,6 +323,7 @@ public class Player : Unit
             return dieCooldown <= 0f;
         }
     }
+
     private void Jump()
     {
         //устанавливаем в аниматоре переменную в false
@@ -331,6 +331,7 @@ public class Player : Unit
         //прикладываем силу вверх, чтобы персонаж подпрыгнул
         rb2d.AddForce(new Vector2(0, 220));
     }
+
     public override void ReceiveDamage(int damage)
     {
         if (CanDie)
@@ -338,6 +339,7 @@ public class Player : Unit
             dieCooldown = dieRate;    
             HealthEnergyBar.use.AdjustCurrentHealth(-damage); 
             Lives = Lives - damage;
+
             LivesText.text = "Lives: " + Lives.ToString();
             rb2d.velocity = Vector3.zero;
             rb2d.AddForce(transform.up * 3.5F, ForceMode2D.Impulse);
@@ -346,7 +348,7 @@ public class Player : Unit
         }
         if (Lives < 1)
         {
-            Lives = 100;
+            Lives = MaxLives;
             HealthEnergyBar.use.AdjustCurrentEnergy(1);
             HealthEnergyBar.use.AdjustCurrentHealth(100);
             LivesText.text = "Lives: " + Lives.ToString();
@@ -356,70 +358,16 @@ public class Player : Unit
             //
         }
     }
-    // чистка консоли
-    public static void ClearLog()
+   
+    public void SetLives(int Count)
     {
-        var assembly = System.Reflection.Assembly.GetAssembly(typeof(UnityEditor.ActiveEditorTracker));
-        var type = assembly.GetType("UnityEditorInternal.LogEntries");
-        var method = type.GetMethod("Clear");
-        method.Invoke(new object(), null);
+        Instantiate(HPRestore, transform.position, Quaternion.identity);
+        LivesText.text = "Lives: " + Lives.ToString();
+        HealthEnergyBar.use.AdjustCurrentHealth(-Count);
     }
-    void OnTriggerStay2D(Collider2D Player)
+    
+    public void SetCountText()
     {
-        //Check the provided Collider2D parameter other to see if it is tagged "PickUp", if it is...
-        if (Player.gameObject.CompareTag("Gold"))
-        {
-            Player.gameObject.SetActive(false);
-            //Add one to the current value of our count variable.
-            count = count + UnityEngine.Random.Range(40, 100);
-            //Update the currently displayed count by calling the SetCountText function.
-            SetCountText();
-        }
-        if (Player.gameObject.CompareTag("HealingPotion"))
-            {
-            var p = transform.position;
-            Instantiate(HPRestore, new Vector3(p.x, p.y, p.z), Quaternion.identity);
-            int hp = - 25;
-            Lives = Lives - hp;
-            if (Lives > 76)
-                {
-                Lives = 100;
-                }
-            LivesText.text = "Lives: " + Lives.ToString();
-            Player.gameObject.SetActive(false);
-                HealthEnergyBar.use.AdjustCurrentHealth(- hp);
-        }
-    }
-    // Вход в воду
-    // Если Игорь заходит в воду то активируется движение в воде
-    //void OnTriggerEnter2D(Collider2D Player)
-    //{
-    //    if (Player.gameObject.tag == "Water")
-    //    {
-    //        isWater = true;
-    //        print("Igor' come in water");
-    //    }        
-    //}
-    // Выход из воды
-    // Если Игорь выходит из воды то движение в воде отключается
-    // для того чтобы не было проблем с выходом Игоря из воды был добавлен импульс
-    /*void OnTriggerExit2D(Collider2D Player)
-    {
-        if (Player.gameObject.CompareTag("Water"))
-        {
-            isWater = false;
-            //rb2d.velocity = Vector3.zero;
-            rb2d.AddForce(transform.up * 0.8F, ForceMode2D.Impulse);
-            print("Igor' leave water");
-        }        
-    }*/
-
-
-    //This function updates the text displaying the number of objects we've collected and displays our victory message if we've collected all of them.
-    void SetCountText()
-    {
-        //Set the text property of our our countText object to "Count: " followed by the number stored in our count variable.
         countText.text = "Gold: " + count.ToString();
-        //LivesText.text = "Lives: " + Lives.ToString();
     }
 }
