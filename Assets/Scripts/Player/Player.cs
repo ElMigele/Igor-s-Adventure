@@ -11,8 +11,10 @@ public class Player : Unit
     public Text LivesText;                          // Количество жизней, оставшихся у игрока
     public HealthEnergyBar HE;                      // Полосы здороья и силы натяжения лука у героя
     [Header("Параметры игрока")]
-    [Range(0.1f, 5)]public float maxSpeed = 2f;     // Максимальная скорость игрока
-    [Range(1, 100)] public int MaxLives = 100;      // Максимальное количество жизней игрока
+    [Range(0.1f, 5)]
+    public float maxSpeed = 2f;     // Максимальная скорость игрока
+    [Range(1, 100)]
+    public int MaxLives = 100;      // Максимальное количество жизней игрока
     public int Lives;                               // Количество жизней
     [NonSerialized]
     public int count;                               // Счетчик золота
@@ -24,6 +26,7 @@ public class Player : Unit
     public double vSpeed;                           // Устанавливаемая скорость взлета и падения для анимации
     //ссылка на компонент анимаций
     private float moveHorizontal;
+    private float moveVertical;
     [Header("Оружия")]
     public float TimeOff = 3;                       // Время атаки
     public GameObject WeaponPoint;                  // Точка, в которой располагается оружие
@@ -48,16 +51,18 @@ public class Player : Unit
     [Header("Проверки на состояние")]
     public bool isGrounded = false;                 // Стоит на земле
     public LayerMask whatIsGround;                  // Cсылка на слой, представляющий землю
+    public LayerMask whatIsLeft;
+    public LayerMask whatIsRight;
     private bool isPress = false;                   // 
     //public bool isWater = false;                  // В воде
 
     private float groundAngle = 0;
     public Transform ground;
-    
+
     private BoxCollider2D box;
-    
+
     public Transform RespawnPoint;                  // Точка респауна
-    [Header("Подключаемые эффекты")]    
+    [Header("Подключаемые эффекты")]
     public GameObject HPRestore;
     public GameObject BloodsEffect;
     [Header("Переменые для гарпуна")]
@@ -68,7 +73,6 @@ public class Player : Unit
     public float jumpSpeed = 3f;
     private bool isJumping;
     public bool groundCheck;
-
     [Header("Скрипты на восстановление положения объектов")]
     public ResetState RSVaz;
     public ResetState RSBox;
@@ -129,6 +133,29 @@ public class Player : Unit
     /// </summary>
     private void FixedUpdate()
     {
+        float moveHorizontal = Input.GetAxis("Horizontal");
+        RaycastHit2D hitLeft = Physics2D.Raycast(transform.position, Vector2.left, 0.1f, whatIsGround);
+        Debug.DrawRay(transform.position, 0.1f * Vector2.left);
+
+        if (hitLeft.collider != null)
+        {
+            if (!groundCheck)
+            {
+                moveHorizontal = 0;
+                Debug.Log("Лево");
+            }   
+        }
+        RaycastHit2D hitRight = Physics2D.Raycast(transform.position, Vector2.left, -0.2f, whatIsGround);
+        Debug.DrawRay(transform.position, -0.2f * Vector2.left);
+
+        if (hitRight.collider != null)
+        {
+            if (!groundCheck)
+            {
+                moveHorizontal = 0;
+                Debug.Log("Право");
+            }
+        }
         //определяем, на земле ли персонаж
         isGrounded = Physics2D.OverlapBox(ground.position, new Vector2(System.Convert.ToSingle(0.02), System.Convert.ToSingle(0.1)), groundAngle, whatIsGround);
         //isWallLeft = Physics2D.OverlapBox(wallLeftCheck.position, new Vector2(System.Convert.ToSingle(1.6), System.Convert.ToSingle(0.05)), groundAngle, whatIsGround);
@@ -141,7 +168,7 @@ public class Player : Unit
         anim.SetBool("Press", isPress && !isSwinging && isGrounded);
         //используем Input.GetAxis для оси Х. метод возвращает значение оси в пределах от -1 до 1.
 
-        float moveHorizontal = Input.GetAxis("Horizontal");
+     
 
         //в компоненте анимаций изменяем значение параметра Speed на значение оси Х.
         //приэтом нам нужен модуль значения
@@ -167,8 +194,8 @@ public class Player : Unit
             box.size = new Vector2(System.Convert.ToSingle(0.14099885), System.Convert.ToSingle(0.4085822));
         }
         if (Input.GetButtonDown("Fire1")) Shoot();
-        if (Input.GetButtonUp ("Fire1")) DontAttack();
- //uгарпун
+        if (Input.GetButtonUp("Fire1")) DontAttack();
+        //uгарпун
         if (moveHorizontal < 0f || moveHorizontal > 0f)
         {
             anim.SetFloat("Speed", Mathf.Abs(moveHorizontal));
@@ -198,7 +225,7 @@ public class Player : Unit
             }
             else
             {
-                anim.SetBool("IsSwinging", false);
+                //anim.SetBool("IsSwinging", false);
                 if (groundCheck)
                 {
                     var groundForce = maxSpeed * 2f;
@@ -209,7 +236,7 @@ public class Player : Unit
         }
         else
         {
-            anim.SetBool("IsSwinging", false);
+            //anim.SetBool("IsSwinging", false);
             anim.SetFloat("Speed", 0f);
         }
         if (!isSwinging)
@@ -223,11 +250,11 @@ public class Player : Unit
             }
         }
     }
-    
+
     private void Update()
     {
         SelectWeapon();
-        
+
         if (shootCooldown > 0)
         {
             shootCooldown -= Time.deltaTime;
@@ -240,7 +267,7 @@ public class Player : Unit
         moveHorizontal = Input.GetAxis("Horizontal");
         var halfHeight = transform.GetComponent<SpriteRenderer>().bounds.extents.y;
         groundCheck = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y - halfHeight - 0.1f), Vector2.down, 0.025f);
-        Debug.DrawRay(new Vector2(transform.position.x, transform.position.y - halfHeight - 0.1f), Vector2.down );
+        Debug.DrawRay(new Vector2(transform.position.x, transform.position.y - halfHeight - 0.1f), Vector2.down);
         if (Input.GetKeyDown(KeyCode.R))
         {
             Lives = MaxLives;
@@ -275,9 +302,11 @@ public class Player : Unit
 
     void Awake()
     {
+        Активное_Оружие = ActiveWeapon.Меч;
         sprite = GetComponent<SpriteRenderer>();
         rb2d = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+
     }
 
     /// <summary>
@@ -291,16 +320,16 @@ public class Player : Unit
     private void Shoot()
     {
         if (Mathf.Sign(transform.localScale.x) > 0)
-        {            
+        {
             Sword.transform.eulerAngles = new Vector3(0, 0, 180);
         }
         else
-        {            
+        {
             Sword.transform.eulerAngles = new Vector3(0, 0, 90);
         }
     }
 
-    public void DontAttack() 
+    public void DontAttack()
     {
         if (Mathf.Sign(transform.localScale.x) > 0)
             Sword.transform.eulerAngles = new Vector3(0, 0, 270);
@@ -336,8 +365,8 @@ public class Player : Unit
     {
         if (CanDie)
         {
-            dieCooldown = dieRate;    
-            HealthEnergyBar.use.AdjustCurrentHealth(-damage); 
+            dieCooldown = dieRate;
+            HealthEnergyBar.use.AdjustCurrentHealth(-damage);
             Lives = Lives - damage;
 
             LivesText.text = "Lives: " + Lives.ToString();
@@ -358,14 +387,14 @@ public class Player : Unit
             //
         }
     }
-   
+
     public void SetLives(int Count)
     {
         Instantiate(HPRestore, transform.position, Quaternion.identity);
         LivesText.text = "Lives: " + Lives.ToString();
         HealthEnergyBar.use.AdjustCurrentHealth(-Count);
     }
-    
+
     public void SetCountText()
     {
         countText.text = "Gold: " + count.ToString();
