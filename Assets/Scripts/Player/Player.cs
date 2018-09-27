@@ -12,7 +12,7 @@ public class Player : Unit
     public HealthEnergyBar HE;                      // Полосы здороья и силы натяжения лука у героя
     [Header("Параметры игрока")]
     [Range(0.1f, 5)]
-    public float maxSpeed = 2f;     // Максимальная скорость игрока
+    public float maxSpeed = 1f;     // Максимальная скорость игрока
     [Range(1, 100)]
     public int MaxLives = 100;      // Максимальное количество жизней игрока
     public int Lives;                               // Количество жизней
@@ -67,7 +67,7 @@ public class Player : Unit
     public GameObject BloodsEffect;
     [Header("Переменые для гарпуна")]
     public Vector2 ropeHook;
-    public float swingForce = 4f;
+    public float swingForce = 6f;
     public bool isSwinging;
     private float jumpInput;
     public float jumpSpeed = 3f;
@@ -133,27 +133,59 @@ public class Player : Unit
     /// </summary>
     private void FixedUpdate()
     {
-        float moveHorizontal = Input.GetAxis("Horizontal");
-        RaycastHit2D hitLeft = Physics2D.Raycast(transform.position, Vector2.left, 0.1f, whatIsGround);
-        Debug.DrawRay(transform.position, 0.1f * Vector2.left);
-
+        RaycastHit2D hitLeft = Physics2D.Raycast(transform.position, Vector2.left, -0.15f, whatIsGround);
+        RaycastHit2D hitLeft2 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y - 0.23f, transform.position.z), Vector2.left, -0.15f, whatIsGround);
+        RaycastHit2D hitLeft3 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y + 0.23f, transform.position.z), Vector2.left, -0.15f, whatIsGround);
+        Debug.DrawRay(transform.position, -0.15f * Vector2.left);
+        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y - 0.23f,  transform.position.z), -0.15f * Vector2.left);
+        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y + 0.23f, transform.position.z), -0.15f * Vector2.left);
         if (hitLeft.collider != null)
         {
-            if (!groundCheck)
+            if (!groundCheck && moveHorizontal > 0f)
             {
                 moveHorizontal = 0;
-                Debug.Log("Лево");
-            }   
+            }
         }
-        RaycastHit2D hitRight = Physics2D.Raycast(transform.position, Vector2.left, -0.2f, whatIsGround);
-        Debug.DrawRay(transform.position, -0.2f * Vector2.left);
+        if (hitLeft2.collider != null)
+        {
+            if (!groundCheck && moveHorizontal > 0f)
+            {
+                moveHorizontal = 0;
+            }
+        }
+        if (hitLeft3.collider != null)
+        {
+            if (!groundCheck && moveHorizontal > 0f)
+            {
+                moveHorizontal = 0;
+            }
+        }
+        RaycastHit2D hitRight = Physics2D.Raycast(transform.position, Vector2.right, -0.15f, whatIsGround);
+        RaycastHit2D hitRight2 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y - 0.23f, transform.position.z), Vector2.right, -0.15f, whatIsGround);
+        RaycastHit2D hitRight3 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y + 0.23f, transform.position.z), Vector2.right, -0.15f, whatIsGround);
+        Debug.DrawRay(transform.position, -0.15f * Vector2.right);
+        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y - 0.23f, transform.position.z), -0.15f * Vector2.right);
+        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y + 0.23f, transform.position.z), -0.15f * Vector2.right);
 
         if (hitRight.collider != null)
         {
-            if (!groundCheck)
+            if (!groundCheck && moveHorizontal < 0f)
             {
                 moveHorizontal = 0;
-                Debug.Log("Право");
+            }
+        }
+        if (hitRight2.collider != null)
+        {
+            if (!groundCheck && moveHorizontal < 0f)
+            {
+                moveHorizontal = 0;
+            }
+        }
+        if (hitRight3.collider != null)
+        {
+            if (!groundCheck && moveHorizontal < 0f)
+            {
+                moveHorizontal = 0;
             }
         }
         //определяем, на земле ли персонаж
@@ -168,7 +200,7 @@ public class Player : Unit
         anim.SetBool("Press", isPress && !isSwinging && isGrounded);
         //используем Input.GetAxis для оси Х. метод возвращает значение оси в пределах от -1 до 1.
 
-     
+
 
         //в компоненте анимаций изменяем значение параметра Speed на значение оси Х.
         //приэтом нам нужен модуль значения
@@ -181,21 +213,31 @@ public class Player : Unit
             //отражаем персонажа вправо
             Flip();
         //приседание
-        if (isGrounded && Input.GetKey(KeyCode.S) && !isSwinging)
-        {
-            box = GetComponent<BoxCollider2D>();
-            box.size = new Vector2(System.Convert.ToSingle(0.1409988), System.Convert.ToSingle(0.27));
-            GetComponent<Rigidbody2D>().velocity = new Vector2(moveHorizontal * maxSpeed / 2, GetComponent<Rigidbody2D>().velocity.y);
-        }
-        else
-        {
-            GetComponent<Rigidbody2D>().velocity = new Vector2(moveHorizontal * maxSpeed, GetComponent<Rigidbody2D>().velocity.y);
-            box = this.GetComponent<BoxCollider2D>();
-            box.size = new Vector2(System.Convert.ToSingle(0.14099885), System.Convert.ToSingle(0.4085822));
-        }
+ 
         if (Input.GetButtonDown("Fire1")) Shoot();
         if (Input.GetButtonUp("Fire1")) DontAttack();
         //uгарпун
+        if (!isSwinging)
+        {
+            rb2d.velocity = new Vector2(moveHorizontal * maxSpeed, GetComponent<Rigidbody2D>().velocity.y);
+            if (isGrounded)
+            {
+
+                
+                if (isGrounded && Input.GetKey(KeyCode.S) && !isSwinging)
+                {
+                    box = GetComponent<BoxCollider2D>();
+                    box.size = new Vector2(System.Convert.ToSingle(0.1409988), System.Convert.ToSingle(0.27));
+                    GetComponent<Rigidbody2D>().velocity = new Vector2(moveHorizontal * maxSpeed / 2, GetComponent<Rigidbody2D>().velocity.y);
+                }
+                else
+                {
+                    GetComponent<Rigidbody2D>().velocity = new Vector2(moveHorizontal * maxSpeed, GetComponent<Rigidbody2D>().velocity.y);
+                    box = this.GetComponent<BoxCollider2D>();
+                    box.size = new Vector2(System.Convert.ToSingle(0.14099885), System.Convert.ToSingle(0.4085822));
+                }
+            }
+        }
         if (moveHorizontal < 0f || moveHorizontal > 0f)
         {
             anim.SetFloat("Speed", Mathf.Abs(moveHorizontal));
@@ -223,22 +265,8 @@ public class Player : Unit
                 var force = perpendicularDirection * swingForce;
                 rb2d.AddForce(force, ForceMode2D.Force);
             }
-            else
-            {
-                //anim.SetBool("IsSwinging", false);
-                if (groundCheck)
-                {
-                    var groundForce = maxSpeed * 2f;
-                    rb2d.AddForce(new Vector2((moveHorizontal * groundForce - rb2d.velocity.x) * groundForce, 0));
-                    rb2d.velocity = new Vector2(rb2d.velocity.x, rb2d.velocity.y);
-                }
-            }
         }
-        else
-        {
-            //anim.SetBool("IsSwinging", false);
-            anim.SetFloat("Speed", 0f);
-        }
+     
         if (!isSwinging)
         {
             if (!groundCheck) return;
@@ -263,7 +291,8 @@ public class Player : Unit
         {
             dieCooldown -= Time.deltaTime;
         }
-        if (isGrounded && Input.GetKeyDown(KeyCode.Space)) Jump();
+        //if (isGrounded && Input.GetKeyDown(KeyCode.Space)) Jump();
+        jumpInput = Input.GetAxis("Jump");
         moveHorizontal = Input.GetAxis("Horizontal");
         var halfHeight = transform.GetComponent<SpriteRenderer>().bounds.extents.y;
         groundCheck = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y - halfHeight - 0.1f), Vector2.down, 0.025f);
