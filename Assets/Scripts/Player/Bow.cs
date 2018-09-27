@@ -3,20 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Bow : MonoBehaviour {
-    public bool InHand = false;                     // Лук в руках игрока?
-    private Collider2D ourCollider;                 // Коллайдер для подбора лука
-    [Range(1, 20)] public float minVel = 1;         // Минимальная скорость пуска стрелы
-    [Range(1, 20)] public float maxVel = 20;        // Максимальная скорость пуска стрелы
-    [Range(5, 15)] public float delVel = 10;        // Скорость изменения скорости пуска стрелы (Скорость натяжения)
-    [Range(1, 15)] public float AttackDelay = 5.0f; // Время перезарядки    
-    private float PickUpTimer;                      // Таймер подбора
-    [Range(0.1f, 2)] public float PickUpDelay = 1;  // Время между подборами
+    public bool InHand = false;
+    [Range(1, 20)] public float minVel = 1;
+    [Range(1, 20)] public float maxVel = 20;
+    [Range(5, 15)] public float delVel = 10;
+    private Collider2D ourCollider;
+    private float timer;
+    [Range(0.1f, 2)] public float delayTimer = 1;
 
     // Use this for initialization
     void Start ()
     {
         ourCollider = transform.GetComponent<Collider2D>();
-        PickUpTimer = PickUpDelay;
+        timer = delayTimer;
     }
 
     void Activation(bool InHand)
@@ -34,9 +33,9 @@ public class Bow : MonoBehaviour {
     // Update is called once per frame
     void Update ()
     {
-        if (PickUpTimer < PickUpDelay)
+        if (timer < delayTimer)
         {
-            PickUpTimer += Time.deltaTime;
+            timer += Time.deltaTime;
         }
     }
 
@@ -44,7 +43,7 @@ public class Bow : MonoBehaviour {
     {
         if (col.CompareTag("Player"))
         {
-            if ((Input.GetKeyDown(KeyCode.E)) && (PickUpTimer >= PickUpDelay))
+            if ((Input.GetKeyDown(KeyCode.E)) && (timer >= delayTimer))
             {
                 Player player = col.GetComponent<Player>();
                 GameObject OldBow = player.Bow;
@@ -63,8 +62,7 @@ public class Bow : MonoBehaviour {
                 archer.BowScript = gameObject.GetComponent<Bow>();
                 InHand = true;
                 Activation(InHand);
-                PickUpTimer = 0;
-                archer.delayTimer = AttackDelay;
+                timer = 0;
             }
         }
     }

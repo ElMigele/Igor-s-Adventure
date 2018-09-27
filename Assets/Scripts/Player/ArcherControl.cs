@@ -4,14 +4,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ArcherControl : MonoBehaviour {
-    [Header("Объекты")]
+
+    // Use this for initialization
     public GameObject Arrow;            // Стрела, которую наш герой выпускает
     public GameObject AimLine;          // Линия прицеливания
-    [Header("Параметры")]
-    public float Velocity;              // Скорость с которой будет лететь стрела (пересылается в ArrowMovement)    
+    public float Velocity;              // Скорость с которой будет лететь стрела (пересылается в ArrowMovement)
+    public Vector2 velDiap =            // Диапазон минимального и максимального 
+                new Vector2(1, 15);     //          значения скроростей
     public float deltaVel = 10.0f;      // Приращение скорости
     public Vector2 mouseMotion;         // Направление мыши
-    public float delayTimer = 5.0f;     // Счетчик времени между выстрелами
+    public float delay = 5.0f;          // задержка между выстрелами
+    public float delayTimer = 5.0f;    // Счетчик времени между выстрелами
     public float mouseSens = 5.0f;      // Чувствиельность мыши
     public Vector2 AimAngleDiap =       // Диапазон минимального и максимального 
                 new Vector2(55, 90);    //          значения угла прицеливания
@@ -22,7 +25,7 @@ public class ArcherControl : MonoBehaviour {
     public Vector2 Len2Vel =
                 new Vector2(1, 11);     // значение, при котором скорость стрелы будет максимальной
     public HealthEnergyBar HE;
-    [HideInInspector]public Bow BowScript;
+    public Bow BowScript;
     void Start ()
     {
         BowScript = gameObject.GetComponentInChildren<Bow>();
@@ -82,8 +85,7 @@ public class ArcherControl : MonoBehaviour {
                 }
                 mouseMotion = 0;
             }*/
-
-            /*// Расчет угла прицела и его задание через две точки пространства
+            // Расчет угла и его задание
             float angle = Vector2.Angle(Vector2.right, AimPoints[1] - AimPoints[0]);
             if (AimPoints[0].y > AimPoints[1].y)
             {// Задание правильного знака угла, он зависит от того, какая точка выше
@@ -100,24 +102,8 @@ public class ArcherControl : MonoBehaviour {
             }
             //Debug.Log("1: " + AimPoints[0] + ", 2: " + AimPoints[1] + ", Угол: " + angle.ToString("0.0") + ", Сторона: " + transform.localScale.x);
             AimLine.transform.eulerAngles = new Vector3(0, 0, angle);
-            */
-            // Расчет угла прицела и его задание через точку положения мыши            
-            var facingDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
-            var aimAngle = Mathf.Atan2(facingDirection.y, facingDirection.x);
-            var aimAngle2 = aimAngle * Mathf.Rad2Deg;
-            Debug.Log(aimAngle2);
-            if (aimAngle < 0f)
-            {
-                aimAngle = Mathf.PI * 2 + aimAngle;
-            }
-            bool Flip = ((Mathf.Abs(aimAngle2) > 91) && (transform.localScale.x > 0) || (Mathf.Abs(aimAngle2) < 89) && (transform.localScale.x < 0));
-            if (Flip)
-            {
-                transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);                
-            }
-            AimLine.transform.rotation = Quaternion.Euler(0, 0, aimAngle * Mathf.Rad2Deg);
-
-            /*// Стрельба на отпускаение правой клавиши
+            /*
+            // Стрельба на отпускаение правой клавиши
             if ((Vector2.Distance(AimPoints[0], AimPoints[1]) >= Len2Vel.y) ||
                 (Vector2.Distance(AimPoints[0], AimPoints[1]) <= Len2Vel.x))
             {// Скорость при расстоянии за границами диапазона
@@ -135,11 +121,12 @@ public class ArcherControl : MonoBehaviour {
             {
                 Instantiate(Arrow, AimPosition, AimLine.transform.rotation);
                 delayTimer = 0;
-            }*/
+            }
+            */
             // Стрельба на левой клавише мыши
             bool prepareFire = Input.GetMouseButton(0);
    
-            if (delayTimer >= BowScript.AttackDelay)
+            if (delayTimer >= delay)
             {
                 if (prepareFire)
                 {

@@ -24,7 +24,6 @@ public class RopeSystem : MonoBehaviour
 
     void Awake()
     {
-        ropeRenderer.enabled = false;
         ropeJoint.enabled = false;
         playerPosition = transform.position;
         ropeHingeAnchorRb = ropeHingeAnchor.GetComponent<Rigidbody2D>();
