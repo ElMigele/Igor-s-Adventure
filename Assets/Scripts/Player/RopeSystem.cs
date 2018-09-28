@@ -123,10 +123,10 @@ public class RopeSystem : MonoBehaviour
                 if (!ropePositions.Contains(hit.point))
                 {
                     // Jump slightly to distance the player a little from the ground after grappling to something.
-                    //if (playerMovement.isGrounded)
-                    //{
-                    //    transform.GetComponent<Rigidbody2D>().AddForce(new Vector2(0f, 2f), ForceMode2D.Impulse);
-                    //}
+                    if (playerMovement.isGrounded)
+                    {
+                        transform.GetComponent<Rigidbody2D>().AddForce(new Vector2(0f, 2f), ForceMode2D.Impulse);
+                    }
                         ropePositions.Add(hit.point);
                     wrapPointsLookup.Add(hit.point, 0);
                     ropeJoint.distance = Vector2.Distance(playerPosition, hit.point);

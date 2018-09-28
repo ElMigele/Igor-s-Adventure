@@ -133,12 +133,16 @@ public class Player : Unit
     /// </summary>
     private void FixedUpdate()
     {
-        RaycastHit2D hitLeft = Physics2D.Raycast(transform.position, Vector2.left, -0.15f, whatIsGround);
-        RaycastHit2D hitLeft2 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y - 0.23f, transform.position.z), Vector2.left, -0.15f, whatIsGround);
-        RaycastHit2D hitLeft3 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y + 0.23f, transform.position.z), Vector2.left, -0.15f, whatIsGround);
-        Debug.DrawRay(transform.position, -0.15f * Vector2.left);
-        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y - 0.23f,  transform.position.z), -0.15f * Vector2.left);
-        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y + 0.23f, transform.position.z), -0.15f * Vector2.left);
+        RaycastHit2D hitLeft = Physics2D.Raycast(transform.position, Vector2.left, -0.12f, whatIsGround);
+        RaycastHit2D hitLeft2 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y - 0.23f, transform.position.z), Vector2.left, -0.12f, whatIsGround);
+        RaycastHit2D hitLeft3 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y + 0.18f, transform.position.z), Vector2.left, -0.12f, whatIsGround);
+        RaycastHit2D hitLeft4 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y - 0.11f, transform.position.z), Vector2.left, -0.12f, whatIsGround);
+        RaycastHit2D hitLeft5 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y + 0.09f, transform.position.z), Vector2.left, -0.12f, whatIsGround);
+        Debug.DrawRay(transform.position, -0.12f * Vector2.left);
+        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y - 0.23f,  transform.position.z), -0.12f * Vector2.left);
+        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y + 0.18f, transform.position.z), -0.12f * Vector2.left);
+        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y - 0.11f, transform.position.z), -0.12f * Vector2.left);
+        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y + 0.09f, transform.position.z), -0.12f * Vector2.left);
         if (hitLeft.collider != null)
         {
             if (!groundCheck && moveHorizontal > 0f)
@@ -160,12 +164,30 @@ public class Player : Unit
                 moveHorizontal = 0;
             }
         }
-        RaycastHit2D hitRight = Physics2D.Raycast(transform.position, Vector2.right, -0.15f, whatIsGround);
-        RaycastHit2D hitRight2 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y - 0.23f, transform.position.z), Vector2.right, -0.15f, whatIsGround);
-        RaycastHit2D hitRight3 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y + 0.23f, transform.position.z), Vector2.right, -0.15f, whatIsGround);
-        Debug.DrawRay(transform.position, -0.15f * Vector2.right);
-        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y - 0.23f, transform.position.z), -0.15f * Vector2.right);
-        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y + 0.23f, transform.position.z), -0.15f * Vector2.right);
+        if (hitLeft4.collider != null)
+        {
+            if (!groundCheck && moveHorizontal > 0f)
+            {
+                moveHorizontal = 0;
+            }
+        }
+        if (hitLeft5.collider != null)
+        {
+            if (!groundCheck && moveHorizontal > 0f)
+            {
+                moveHorizontal = 0;
+            }
+        }
+        RaycastHit2D hitRight = Physics2D.Raycast(transform.position, Vector2.right, -0.12f, whatIsGround);
+        RaycastHit2D hitRight2 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y - 0.23f, transform.position.z), Vector2.right, -0.12f, whatIsGround);
+        RaycastHit2D hitRight3 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y + 0.18f, transform.position.z), Vector2.right, -0.12f, whatIsGround);
+        RaycastHit2D hitRight4 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y - 0.11f, transform.position.z), Vector2.right, -0.12f, whatIsGround);
+        RaycastHit2D hitRight5 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y + 0.09f, transform.position.z), Vector2.right, -0.12f, whatIsGround);
+        Debug.DrawRay(transform.position, -0.12f * Vector2.right);
+        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y - 0.23f, transform.position.z), -0.12f * Vector2.right);
+        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y + 0.18f, transform.position.z), -0.12f * Vector2.right);
+        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y - 0.11f, transform.position.z), -0.12f * Vector2.right);
+        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y + 0.09f, transform.position.z), -0.12f * Vector2.right);
 
         if (hitRight.collider != null)
         {
@@ -182,6 +204,20 @@ public class Player : Unit
             }
         }
         if (hitRight3.collider != null)
+        {
+            if (!groundCheck && moveHorizontal < 0f)
+            {
+                moveHorizontal = 0;
+            }
+        }
+        if (hitRight4.collider != null)
+        {
+            if (!groundCheck && moveHorizontal < 0f)
+            {
+                moveHorizontal = 0;
+            }
+        }
+        if (hitRight5.collider != null)
         {
             if (!groundCheck && moveHorizontal < 0f)
             {
@@ -291,8 +327,8 @@ public class Player : Unit
         {
             dieCooldown -= Time.deltaTime;
         }
-        //if (isGrounded && Input.GetKeyDown(KeyCode.Space)) Jump();
-        jumpInput = Input.GetAxis("Jump");
+        if (isGrounded && Input.GetKeyDown(KeyCode.Space)) Jump();
+        // jumpInput = Input.GetAxis("Jump");
         moveHorizontal = Input.GetAxis("Horizontal");
         var halfHeight = transform.GetComponent<SpriteRenderer>().bounds.extents.y;
         groundCheck = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y - halfHeight - 0.1f), Vector2.down, 0.025f);
@@ -387,7 +423,7 @@ public class Player : Unit
         //устанавливаем в аниматоре переменную в false
         anim.SetBool("Ground", false);
         //прикладываем силу вверх, чтобы персонаж подпрыгнул
-        rb2d.AddForce(new Vector2(0, 220));
+        rb2d.AddForce(new Vector2(0, 920));
     }
 
     public override void ReceiveDamage(int damage)
