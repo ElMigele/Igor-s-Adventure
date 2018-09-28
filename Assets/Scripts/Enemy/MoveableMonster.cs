@@ -222,7 +222,6 @@ public class MoveableMonster : Monster
                     angle = -angle;
                 }
                 Instantiate(Arrow, transform.position, Quaternion.Euler(0, 0, angle));
-                Debug.Log("Ya: " + EnemyVisibility.PlayerPos + " Vrag " + transform.position);
             }
             AttackTimer = 0;
         }
