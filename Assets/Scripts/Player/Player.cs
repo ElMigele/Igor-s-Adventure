@@ -19,6 +19,7 @@ public class Player : Unit
     [NonSerialized]
     public int count;                               // Счетчик золота
     public int RandomR;                             // Случайное число
+    public float BarrierNear = -0.085f;
     [Header("Анимация")]
     private Animator anim;                          // Анимация
     private Rigidbody2D rb2d;                       // Твердое тело игрока
@@ -51,8 +52,8 @@ public class Player : Unit
     [Header("Проверки на состояние")]
     public bool isGrounded = false;                 // Стоит на земле
     public LayerMask whatIsGround;                  // Cсылка на слой, представляющий землю
-    public LayerMask whatIsLeft;
-    public LayerMask whatIsRight;
+    //public LayerMask whatIsBox;
+    public LayerMask whatIsBarrier;
     private bool isPress = false;                   // 
     //public bool isWater = false;                  // В воде
 
@@ -76,6 +77,11 @@ public class Player : Unit
     [Header("Скрипты на восстановление положения объектов")]
     public ResetState RSVaz;
     public ResetState RSBox;
+    [Header("Таскание ящиков")]
+    public float distance = 1f;
+    public LayerMask boxMask;
+    public bool isBoxPushig;
+    GameObject Box;
 
     private void Start()
     {
@@ -94,6 +100,7 @@ public class Player : Unit
         Bow.transform.position = WeaponPoint.transform.position;
         Sword.transform.position = WeaponPoint.transform.position;
         ChangeWeapon(Активное_Оружие);
+        BarrierNear = -0.085f;
     }
 
     private void ChangeWeapon(ActiveWeapon активноeOружие)
@@ -106,6 +113,7 @@ public class Player : Unit
             Bow.SetActive(true);
             archer.AimLine.SetActive(true);
             rope.enabled = false;
+            rope.ResetRope();
         }
         if (Активное_Оружие == ActiveWeapon.Меч)
         {
@@ -115,6 +123,7 @@ public class Player : Unit
             Bow.SetActive(false);
             archer.AimLine.SetActive(false);
             rope.enabled = false;
+            rope.ResetRope();
         }
         if (Активное_Оружие == ActiveWeapon.Гарпун)
         {
@@ -133,16 +142,17 @@ public class Player : Unit
     /// </summary>
     private void FixedUpdate()
     {
-        RaycastHit2D hitLeft = Physics2D.Raycast(transform.position, Vector2.left, -0.12f, whatIsGround);
-        RaycastHit2D hitLeft2 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y - 0.23f, transform.position.z), Vector2.left, -0.12f, whatIsGround);
-        RaycastHit2D hitLeft3 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y + 0.18f, transform.position.z), Vector2.left, -0.12f, whatIsGround);
-        RaycastHit2D hitLeft4 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y - 0.11f, transform.position.z), Vector2.left, -0.12f, whatIsGround);
-        RaycastHit2D hitLeft5 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y + 0.09f, transform.position.z), Vector2.left, -0.12f, whatIsGround);
-        Debug.DrawRay(transform.position, -0.12f * Vector2.left);
-        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y - 0.23f,  transform.position.z), -0.12f * Vector2.left);
-        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y + 0.18f, transform.position.z), -0.12f * Vector2.left);
-        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y - 0.11f, transform.position.z), -0.12f * Vector2.left);
-        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y + 0.09f, transform.position.z), -0.12f * Vector2.left);
+        RaycastHit2D hitLeft = Physics2D.Raycast(transform.position, Vector2.left, BarrierNear, whatIsBarrier);
+        RaycastHit2D hitLeft2 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y - 0.23f, transform.position.z), Vector2.left, BarrierNear, whatIsBarrier);
+        RaycastHit2D hitLeft3 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y + 0.18f, transform.position.z), Vector2.left, BarrierNear, whatIsBarrier);
+        RaycastHit2D hitLeft4 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y - 0.11f, transform.position.z), Vector2.left, BarrierNear, whatIsBarrier);
+        RaycastHit2D hitLeft5 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y + 0.09f, transform.position.z), Vector2.left, BarrierNear, whatIsBarrier);
+        //RaycastHit2D hitLeftBox = Physics2D.Raycast(transform.position, Vector2.left, -0.12f, whatIsBox);
+        Debug.DrawRay(transform.position, BarrierNear * Vector2.left);
+        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y - 0.23f, transform.position.z), BarrierNear * Vector2.left);
+        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y + 0.18f, transform.position.z), BarrierNear * Vector2.left);
+        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y - 0.11f, transform.position.z), BarrierNear * Vector2.left);
+        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y + 0.09f, transform.position.z), BarrierNear * Vector2.left);
         if (hitLeft.collider != null)
         {
             if (!groundCheck && moveHorizontal > 0f)
@@ -178,16 +188,26 @@ public class Player : Unit
                 moveHorizontal = 0;
             }
         }
-        RaycastHit2D hitRight = Physics2D.Raycast(transform.position, Vector2.right, -0.12f, whatIsGround);
-        RaycastHit2D hitRight2 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y - 0.23f, transform.position.z), Vector2.right, -0.12f, whatIsGround);
-        RaycastHit2D hitRight3 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y + 0.18f, transform.position.z), Vector2.right, -0.12f, whatIsGround);
-        RaycastHit2D hitRight4 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y - 0.11f, transform.position.z), Vector2.right, -0.12f, whatIsGround);
-        RaycastHit2D hitRight5 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y + 0.09f, transform.position.z), Vector2.right, -0.12f, whatIsGround);
-        Debug.DrawRay(transform.position, -0.12f * Vector2.right);
-        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y - 0.23f, transform.position.z), -0.12f * Vector2.right);
-        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y + 0.18f, transform.position.z), -0.12f * Vector2.right);
-        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y - 0.11f, transform.position.z), -0.12f * Vector2.right);
-        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y + 0.09f, transform.position.z), -0.12f * Vector2.right);
+
+        //if (hitLeft3.collider != null)
+        //{
+        //    if (!groundCheck && moveHorizontal > 0f && GetComponent<Rigidbody2D>().velocity.y < 0)
+        //    {
+        //        GetComponent<Rigidbody2D>().velocity = new Vector2(maxSpeed * hitLeft3.normal.x, -maxSpeed);
+        //    }
+        //}
+
+        RaycastHit2D hitRight = Physics2D.Raycast(transform.position, Vector2.right, BarrierNear, whatIsBarrier);
+        RaycastHit2D hitRight2 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y - 0.23f, transform.position.z), Vector2.right, BarrierNear, whatIsBarrier);
+        RaycastHit2D hitRight3 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y + 0.18f, transform.position.z), Vector2.right, BarrierNear, whatIsBarrier);
+        RaycastHit2D hitRight4 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y - 0.11f, transform.position.z), Vector2.right, BarrierNear, whatIsBarrier);
+        RaycastHit2D hitRight5 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y + 0.09f, transform.position.z), Vector2.right, BarrierNear, whatIsBarrier);
+        //RaycastHit2D hitRightBox = Physics2D.Raycast(transform.position, Vector2.right, -0.12f, whatIsBox);
+        Debug.DrawRay(transform.position, BarrierNear * Vector2.right);
+        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y - 0.23f, transform.position.z), BarrierNear * Vector2.right);
+        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y + 0.18f, transform.position.z), BarrierNear * Vector2.right);
+        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y - 0.11f, transform.position.z), BarrierNear * Vector2.right);
+        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y + 0.09f, transform.position.z), BarrierNear * Vector2.right);
 
         if (hitRight.collider != null)
         {
@@ -224,6 +244,7 @@ public class Player : Unit
                 moveHorizontal = 0;
             }
         }
+
         //определяем, на земле ли персонаж
         isGrounded = Physics2D.OverlapBox(ground.position, new Vector2(System.Convert.ToSingle(0.02), System.Convert.ToSingle(0.1)), groundAngle, whatIsGround);
         //isWallLeft = Physics2D.OverlapBox(wallLeftCheck.position, new Vector2(System.Convert.ToSingle(1.6), System.Convert.ToSingle(0.05)), groundAngle, whatIsGround);
@@ -233,7 +254,7 @@ public class Player : Unit
         anim.SetBool("Ground", isGrounded);
         //устанавливаем в аниматоре значение скорости взлета/падения
         anim.SetFloat("vSpeed", rb2d.velocity.y);
-        anim.SetBool("Press", isPress && !isSwinging && isGrounded);
+        anim.SetBool("Press", isPress && !isSwinging && isGrounded && !isBoxPushig);
         //используем Input.GetAxis для оси Х. метод возвращает значение оси в пределах от -1 до 1.
 
 
@@ -249,17 +270,16 @@ public class Player : Unit
             //отражаем персонажа вправо
             Flip();
         //приседание
- 
+
         if (Input.GetButtonDown("Fire1")) Shoot();
         if (Input.GetButtonUp("Fire1")) DontAttack();
         //uгарпун
         if (!isSwinging)
         {
             rb2d.velocity = new Vector2(moveHorizontal * maxSpeed, GetComponent<Rigidbody2D>().velocity.y);
-            if (isGrounded)
+            if (isGrounded && !isBoxPushig)
             {
 
-                
                 if (isGrounded && Input.GetKey(KeyCode.S) && !isSwinging)
                 {
                     box = GetComponent<BoxCollider2D>();
@@ -302,7 +322,7 @@ public class Player : Unit
                 rb2d.AddForce(force, ForceMode2D.Force);
             }
         }
-     
+
         if (!isSwinging)
         {
             if (!groundCheck) return;
@@ -327,8 +347,30 @@ public class Player : Unit
         {
             dieCooldown -= Time.deltaTime;
         }
-        if (isGrounded && Input.GetKeyDown(KeyCode.Space)) Jump();
+
+        if (isGrounded && Input.GetKeyDown(KeyCode.Space) && !isBoxPushig)
+        {
+            Jump();
+        }
         // jumpInput = Input.GetAxis("Jump");
+        Physics2D.queriesStartInColliders = false;
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.right * transform.localScale.x, distance, boxMask);
+
+        if (hit.collider != null && hit.collider.gameObject.tag == "Box" && Input.GetKeyDown(KeyCode.E) && !Input.GetKey(KeyCode.S))
+        {
+            Box = hit.collider.gameObject;
+            Box.GetComponent<FixedJoint2D>().connectedBody = this.GetComponent<Rigidbody2D>();
+            Box.GetComponent<FixedJoint2D>().enabled = true;
+            //box.GetComponent<boxpull>().beingPushed = true;
+            isBoxPushig = true;
+        }
+        else if (Input.GetKeyUp(KeyCode.E))
+        {
+            Box.GetComponent<FixedJoint2D>().enabled = false;
+            isBoxPushig = false;
+            //box.GetComponent<boxpull>().beingPushed = false;
+        }
+
         moveHorizontal = Input.GetAxis("Horizontal");
         var halfHeight = transform.GetComponent<SpriteRenderer>().bounds.extents.y;
         groundCheck = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y - halfHeight - 0.1f), Vector2.down, 0.025f);
@@ -371,7 +413,6 @@ public class Player : Unit
         sprite = GetComponent<SpriteRenderer>();
         rb2d = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
-
     }
 
     /// <summary>
@@ -464,4 +505,11 @@ public class Player : Unit
     {
         countText.text = "Gold: " + count.ToString();
     }
+
+    //void OnDrawGizmos()
+    //{
+    //    Gizmos.color = Color.yellow;
+
+    //    Gizmos.DrawLine(transform.position, (Vector2)transform.position + Vector2.right * transform.localScale.x * distance);
+    //}
 }

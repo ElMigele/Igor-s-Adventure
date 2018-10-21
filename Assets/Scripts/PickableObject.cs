@@ -18,6 +18,19 @@ public class PickableObject : MonoBehaviour
     public bool assembledKeys1 = false;
     public bool assembledKeys2 = false;
     public bool assembledKeys3 = false;
+    private float PickUpTimer;                      // Таймер подбора
+    [Range(0.1f, 2)] public float PickUpDelay = 1;  // Время между подборами
+    void Start()
+    {
+        PickUpTimer = PickUpDelay;
+    }
+    void Update()
+    {
+        if (PickUpTimer < PickUpDelay)
+        {
+            PickUpTimer += Time.deltaTime;
+        }
+    }
     private void OnCollisionEnter2D(Collision2D col)
     {
         if (col.transform.CompareTag("Player"))
@@ -29,6 +42,13 @@ public class PickableObject : MonoBehaviour
                 Destroy(gameObject);
             }
 
+           
+        }
+    }
+    private void OnTriggerStay2D(Collider2D col)
+    {
+        if ((Input.GetKeyDown(KeyCode.E)) && (PickUpTimer >= PickUpDelay))
+        {
             if (ObjectType == Object.HealthBonus)
             {
                 Player player = col.transform.GetComponent<Player>();
@@ -76,4 +96,4 @@ public class PickableObject : MonoBehaviour
             }
         }
     }
-}
+    }
