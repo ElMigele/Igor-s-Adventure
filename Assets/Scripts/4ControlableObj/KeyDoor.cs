@@ -3,37 +3,52 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class KeyDoor : MonoBehaviour {
-
-    public GameObject UIKey;
-
-    public PickableObject PickableObject;
-    // Use this for initialization
-
-
+    public enum KeySelection
+    {
+        KeyType1,                       
+        KeyType2,                         
+        KeyType3,
+        KeyType4
+    }
+    public KeySelection KeySelectionType = KeySelection.KeyType1;
     // Update is called once per frame
     private void OnCollisionEnter2D(Collision2D col)
     {
         if (col.transform.CompareTag("Player"))
         {
-            if (PickableObject.assembledKeys0)
+            if (KeySelectionType == KeySelection.KeyType1)
+            { 
+                    if (GameObject.Find("Key1(Clone)") != null)
+                    {
+                        Destroy(gameObject);
+                        Destroy(GameObject.Find("Key1(Clone)"));
+                    }
+              }
+
+            if (KeySelectionType == KeySelection.KeyType2)
             {
-                UIKey.SetActive(false);
-                Destroy(gameObject);
+                if (GameObject.Find("Key2(Clone)") != null)
+                {
+                    Destroy(gameObject);
+                    Destroy(GameObject.Find("Key2(Clone)"));
+                }
             }
-            if (PickableObject.assembledKeys1)
+
+            if (KeySelectionType == KeySelection.KeyType3)
             {
-                UIKey.SetActive(false);
-                Destroy(gameObject);
+                if (GameObject.Find("Key3(Clone)") != null)
+                {
+                    Destroy(gameObject);
+                    Destroy(GameObject.Find("Key3(Clone)"));
+                }
             }
-            if (PickableObject.assembledKeys2)
+            if (KeySelectionType == KeySelection.KeyType4)
             {
-                UIKey.SetActive(false);
-                Destroy(gameObject);
-            }
-            if (PickableObject.assembledKeys3)
-            {
-                UIKey.SetActive(false);
-                Destroy(gameObject);
+                if (GameObject.Find("Key4(Clone)") != null)
+                {
+                    Destroy(gameObject);
+                    Destroy(GameObject.Find("Key4(Clone)"));
+                }
             }
         }
     }
