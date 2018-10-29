@@ -21,6 +21,7 @@ public class Pickup : MonoBehaviour
              inventory.isFull[i] = true;
              Instantiate(itemButton, inventory.slots[i].transform, false);
              Destroy(gameObject);
+             inventory.cross[i].SetActive(true);
              break;
               }
           }

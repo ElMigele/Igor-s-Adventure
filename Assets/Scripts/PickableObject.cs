@@ -12,7 +12,6 @@ public class PickableObject : MonoBehaviour
     }
     public Object ObjectType;   // Тип объекта
     public int Count;           // Количество восстанавливаемого здоровья / получаемого золота 
-    public  GameObject[] UIKey;
 
     private float PickUpTimer;                      // Таймер подбора
     [Range(0.1f, 2)] public float PickUpDelay = 1;  // Время между подборами

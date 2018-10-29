@@ -142,109 +142,7 @@ public class Player : Unit
     /// </summary>
     private void FixedUpdate()
     {
-        RaycastHit2D hitLeft = Physics2D.Raycast(transform.position, Vector2.left, BarrierNear, whatIsBarrier);
-        RaycastHit2D hitLeft2 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y - 0.23f, transform.position.z), Vector2.left, BarrierNear, whatIsBarrier);
-        RaycastHit2D hitLeft3 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y + 0.18f, transform.position.z), Vector2.left, BarrierNear, whatIsBarrier);
-        RaycastHit2D hitLeft4 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y - 0.11f, transform.position.z), Vector2.left, BarrierNear, whatIsBarrier);
-        RaycastHit2D hitLeft5 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y + 0.09f, transform.position.z), Vector2.left, BarrierNear, whatIsBarrier);
-        //RaycastHit2D hitLeftBox = Physics2D.Raycast(transform.position, Vector2.left, -0.12f, whatIsBox);
-        Debug.DrawRay(transform.position, BarrierNear * Vector2.left);
-        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y - 0.23f, transform.position.z), BarrierNear * Vector2.left);
-        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y + 0.18f, transform.position.z), BarrierNear * Vector2.left);
-        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y - 0.11f, transform.position.z), BarrierNear * Vector2.left);
-        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y + 0.09f, transform.position.z), BarrierNear * Vector2.left);
-        if (hitLeft.collider != null)
-        {
-            if (!groundCheck && moveHorizontal > 0f)
-            {
-                moveHorizontal = 0;
-            }
-        }
-        if (hitLeft2.collider != null)
-        {
-            if (!groundCheck && moveHorizontal > 0f)
-            {
-                moveHorizontal = 0;
-            }
-        }
-        if (hitLeft3.collider != null)
-        {
-            if (!groundCheck && moveHorizontal > 0f)
-            {
-                moveHorizontal = 0;
-            }
-        }
-        if (hitLeft4.collider != null)
-        {
-            if (!groundCheck && moveHorizontal > 0f)
-            {
-                moveHorizontal = 0;
-            }
-        }
-        if (hitLeft5.collider != null)
-        {
-            if (!groundCheck && moveHorizontal > 0f)
-            {
-                moveHorizontal = 0;
-            }
-        }
-
-        //if (hitLeft3.collider != null)
-        //{
-        //    if (!groundCheck && moveHorizontal > 0f && GetComponent<Rigidbody2D>().velocity.y < 0)
-        //    {
-        //        GetComponent<Rigidbody2D>().velocity = new Vector2(maxSpeed * hitLeft3.normal.x, -maxSpeed);
-        //    }
-        //}
-
-        RaycastHit2D hitRight = Physics2D.Raycast(transform.position, Vector2.right, BarrierNear, whatIsBarrier);
-        RaycastHit2D hitRight2 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y - 0.23f, transform.position.z), Vector2.right, BarrierNear, whatIsBarrier);
-        RaycastHit2D hitRight3 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y + 0.18f, transform.position.z), Vector2.right, BarrierNear, whatIsBarrier);
-        RaycastHit2D hitRight4 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y - 0.11f, transform.position.z), Vector2.right, BarrierNear, whatIsBarrier);
-        RaycastHit2D hitRight5 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y + 0.09f, transform.position.z), Vector2.right, BarrierNear, whatIsBarrier);
-        //RaycastHit2D hitRightBox = Physics2D.Raycast(transform.position, Vector2.right, -0.12f, whatIsBox);
-        Debug.DrawRay(transform.position, BarrierNear * Vector2.right);
-        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y - 0.23f, transform.position.z), BarrierNear * Vector2.right);
-        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y + 0.18f, transform.position.z), BarrierNear * Vector2.right);
-        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y - 0.11f, transform.position.z), BarrierNear * Vector2.right);
-        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y + 0.09f, transform.position.z), BarrierNear * Vector2.right);
-
-        if (hitRight.collider != null)
-        {
-            if (!groundCheck && moveHorizontal < 0f)
-            {
-                moveHorizontal = 0;
-            }
-        }
-        if (hitRight2.collider != null)
-        {
-            if (!groundCheck && moveHorizontal < 0f)
-            {
-                moveHorizontal = 0;
-            }
-        }
-        if (hitRight3.collider != null)
-        {
-            if (!groundCheck && moveHorizontal < 0f)
-            {
-                moveHorizontal = 0;
-            }
-        }
-        if (hitRight4.collider != null)
-        {
-            if (!groundCheck && moveHorizontal < 0f)
-            {
-                moveHorizontal = 0;
-            }
-        }
-        if (hitRight5.collider != null)
-        {
-            if (!groundCheck && moveHorizontal < 0f)
-            {
-                moveHorizontal = 0;
-            }
-        }
-
+      
         //определяем, на земле ли персонаж
         isGrounded = Physics2D.OverlapBox(ground.position, new Vector2(System.Convert.ToSingle(0.02), System.Convert.ToSingle(0.1)), groundAngle, whatIsGround);
         //isWallLeft = Physics2D.OverlapBox(wallLeftCheck.position, new Vector2(System.Convert.ToSingle(1.6), System.Convert.ToSingle(0.05)), groundAngle, whatIsGround);
@@ -255,31 +153,23 @@ public class Player : Unit
         //устанавливаем в аниматоре значение скорости взлета/падения
         anim.SetFloat("vSpeed", rb2d.velocity.y);
         anim.SetBool("Press", isPress && !isSwinging && isGrounded && !isBoxPushig);
-        //используем Input.GetAxis для оси Х. метод возвращает значение оси в пределах от -1 до 1.
 
-
-
-        //в компоненте анимаций изменяем значение параметра Speed на значение оси Х.
-        //приэтом нам нужен модуль значения
-
-        //обращаемся к компоненту персонажа RigidBody2D. задаем ему скорость по оси Х, 
-        //равную значению оси Х умноженное на значение макс. скорости
-        //Debug.Log(rb2d.velocity.x);
         //если нажали клавишу для перемещения вправо, а персонаж направлен влево
-        if ((moveHorizontal != 0) && (Mathf.Sign(moveHorizontal) != Mathf.Sign(transform.localScale.x)))
-            //отражаем персонажа вправо
+        if ((moveHorizontal != 0) && (Mathf.Sign(moveHorizontal) != Mathf.Sign(transform.localScale.x)) && !isBoxPushig)
+        //отражаем персонажа вправо
+        { 
             Flip();
-        //приседание
-
+        }
+  
         if (Input.GetButtonDown("Fire1")) Shoot();
         if (Input.GetButtonUp("Fire1")) DontAttack();
-        //uгарпун
+
+        //Код для приседания персонажа 
         if (!isSwinging)
         {
             rb2d.velocity = new Vector2(moveHorizontal * maxSpeed, GetComponent<Rigidbody2D>().velocity.y);
             if (isGrounded && !isBoxPushig)
             {
-
                 if (isGrounded && Input.GetKey(KeyCode.S) && !isSwinging)
                 {
                     box = GetComponent<BoxCollider2D>();
@@ -294,7 +184,20 @@ public class Player : Unit
                 }
             }
         }
-        if (moveHorizontal < 0f || moveHorizontal > 0f)
+
+        // Замедление при толкании ящика 
+        if (isBoxPushig)
+        {
+            GetComponent<Rigidbody2D>().velocity = new Vector2(moveHorizontal * maxSpeed/2, GetComponent<Rigidbody2D>().velocity.y);
+        }
+        else
+        {
+            GetComponent<Rigidbody2D>().velocity = new Vector2(moveHorizontal * maxSpeed, GetComponent<Rigidbody2D>().velocity.y);
+        }
+
+    
+        // Работа с гарпуном 
+        if (moveHorizontal < 0f || moveHorizontal > 0f) 
         {
             anim.SetFloat("Speed", Mathf.Abs(moveHorizontal));
             if (isSwinging)
@@ -322,7 +225,6 @@ public class Player : Unit
                 rb2d.AddForce(force, ForceMode2D.Force);
             }
         }
-
         if (!isSwinging)
         {
             if (!groundCheck) return;
@@ -333,6 +235,7 @@ public class Player : Unit
                 rb2d.velocity = new Vector2(rb2d.velocity.x, jumpSpeed);
             }
         }
+
     }
 
     private void Update()
@@ -353,10 +256,11 @@ public class Player : Unit
             Jump();
         }
         // jumpInput = Input.GetAxis("Jump");
-        Physics2D.queriesStartInColliders = false;
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.right * transform.localScale.x, distance, boxMask);
 
-        if (hit.collider != null && hit.collider.gameObject.tag == "Box" && Input.GetKeyDown(KeyCode.E) && !Input.GetKey(KeyCode.S))
+        // Таскание ящика
+        Physics2D.queriesStartInColliders = false; 
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.right * transform.localScale.x, distance, boxMask); // Луч для обнаружения ящика
+        if (hit.collider != null && hit.collider.gameObject.tag == "Box" && Input.GetKeyDown(KeyCode.E) && !Input.GetKey(KeyCode.S)) // Условия для передвежения ящика
         {
             Box = hit.collider.gameObject;
             Box.GetComponent<FixedJoint2D>().connectedBody = this.GetComponent<Rigidbody2D>();
@@ -370,6 +274,7 @@ public class Player : Unit
             isBoxPushig = false;
             //box.GetComponent<boxpull>().beingPushed = false;
         }
+
 
         moveHorizontal = Input.GetAxis("Horizontal");
         var halfHeight = transform.GetComponent<SpriteRenderer>().bounds.extents.y;
