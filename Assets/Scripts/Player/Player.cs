@@ -37,12 +37,12 @@ public class Player : Unit
     {
         Лук,          // Лук 
         Меч,          // Меч
-        Гарпун        // Гарпун
+        //Гарпун        // Гарпун
     }
     public ActiveWeapon Активное_Оружие;            // Активное оружие
     private PlayerAttack attack;                    // Скрипт на владение мечем
     private ArcherControl archer;                   // Скрипт на владение луком
-    private RopeSystem rope;                        // Скрипт на владение гарпуном
+    //private RopeSystem rope;                        // Скрипт на владение гарпуном
 
     private float shootCooldown;
     private float dieCooldown;
@@ -56,7 +56,7 @@ public class Player : Unit
     public LayerMask whatIsBarrier;
     private bool isPress = false;                   // 
     //public bool isWater = false;                  // В воде
-
+    public bool groundCheck;
     private float groundAngle = 0;
     public Transform ground;
 
@@ -66,14 +66,13 @@ public class Player : Unit
     [Header("Подключаемые эффекты")]
     public GameObject HPRestore;
     public GameObject BloodsEffect;
-    [Header("Переменые для гарпуна")]
-    public Vector2 ropeHook;
-    public float swingForce = 6f;
-    public bool isSwinging;
-    private float jumpInput;
-    public float jumpSpeed = 3f;
-    private bool isJumping;
-    public bool groundCheck;
+    //[Header("Переменые для гарпуна")]
+    //public Vector2 ropeHook;
+    //public float swingForce = 6f;
+    //public bool isSwinging;
+    //private float jumpInput;
+    //public float jumpSpeed = 3f;
+    //private bool isJumping;
     [Header("Скрипты на восстановление положения объектов")]
     public ResetState RSVaz;
     public ResetState RSBox;
@@ -96,7 +95,7 @@ public class Player : Unit
         LivesText.text = "Lives: " + Lives.ToString();
         attack = gameObject.GetComponent<PlayerAttack>();
         archer = gameObject.GetComponent<ArcherControl>();
-        rope = gameObject.GetComponent<RopeSystem>();
+        //rope = gameObject.GetComponent<RopeSystem>();
         Bow.transform.position = WeaponPoint.transform.position;
         Sword.transform.position = WeaponPoint.transform.position;
         ChangeWeapon(Активное_Оружие);
@@ -112,8 +111,8 @@ public class Player : Unit
             archer.enabled = true;
             Bow.SetActive(true);
             archer.AimLine.SetActive(true);
-            rope.enabled = false;
-            rope.ResetRope();
+            //rope.enabled = false;
+            //rope.ResetRope();
         }
         if (Активное_Оружие == ActiveWeapon.Меч)
         {
@@ -122,18 +121,18 @@ public class Player : Unit
             archer.enabled = false;
             Bow.SetActive(false);
             archer.AimLine.SetActive(false);
-            rope.enabled = false;
-            rope.ResetRope();
+            //rope.enabled = false;
+            //rope.ResetRope();
         }
-        if (Активное_Оружие == ActiveWeapon.Гарпун)
-        {
-            attack.enabled = false;
-            archer.enabled = false;
-            Bow.SetActive(false);
-            Sword.SetActive(false);
-            archer.AimLine.SetActive(false);
-            rope.enabled = true;
-        }
+        //if (Активное_Оружие == ActiveWeapon.Гарпун)
+        //{
+        //    attack.enabled = false;
+        //    archer.enabled = false;
+        //    Bow.SetActive(false);
+        //    Sword.SetActive(false);
+        //    archer.AimLine.SetActive(false);
+        //    rope.enabled = true;
+        //}
     }
 
     /// <summary>
@@ -142,7 +141,7 @@ public class Player : Unit
     /// </summary>
     private void FixedUpdate()
     {
-      
+
         //определяем, на земле ли персонаж
         isGrounded = Physics2D.OverlapBox(ground.position, new Vector2(System.Convert.ToSingle(0.02), System.Convert.ToSingle(0.1)), groundAngle, whatIsGround);
         //isWallLeft = Physics2D.OverlapBox(wallLeftCheck.position, new Vector2(System.Convert.ToSingle(1.6), System.Convert.ToSingle(0.05)), groundAngle, whatIsGround);
@@ -152,91 +151,91 @@ public class Player : Unit
         anim.SetBool("Ground", isGrounded);
         //устанавливаем в аниматоре значение скорости взлета/падения
         anim.SetFloat("vSpeed", rb2d.velocity.y);
-        anim.SetBool("Press", isPress && !isSwinging && isGrounded && !isBoxPushig);
+        anim.SetBool("Press", isPress /*&& !isSwinging*/ && isGrounded && !isBoxPushig);
 
         //если нажали клавишу для перемещения вправо, а персонаж направлен влево
         if ((moveHorizontal != 0) && (Mathf.Sign(moveHorizontal) != Mathf.Sign(transform.localScale.x)) && !isBoxPushig)
         //отражаем персонажа вправо
-        { 
+        {
             Flip();
         }
-  
+
         if (Input.GetButtonDown("Fire1")) Shoot();
         if (Input.GetButtonUp("Fire1")) DontAttack();
 
         //Код для приседания персонажа 
-        if (!isSwinging)
+        //if (!isSwinging)
+        //{
+        rb2d.velocity = new Vector2(moveHorizontal * maxSpeed, GetComponent<Rigidbody2D>().velocity.y);
+        if (isGrounded && !isBoxPushig)
         {
-            rb2d.velocity = new Vector2(moveHorizontal * maxSpeed, GetComponent<Rigidbody2D>().velocity.y);
-            if (isGrounded && !isBoxPushig)
+            if (isGrounded && Input.GetKey(KeyCode.S) /*&& !isSwinging*/)
             {
-                if (isGrounded && Input.GetKey(KeyCode.S) && !isSwinging)
-                {
-                    box = GetComponent<BoxCollider2D>();
-                    box.size = new Vector2(System.Convert.ToSingle(0.1409988), System.Convert.ToSingle(0.27));
-                    GetComponent<Rigidbody2D>().velocity = new Vector2(moveHorizontal * maxSpeed / 2, GetComponent<Rigidbody2D>().velocity.y);
-                }
-                else
-                {
-                    GetComponent<Rigidbody2D>().velocity = new Vector2(moveHorizontal * maxSpeed, GetComponent<Rigidbody2D>().velocity.y);
-                    box = this.GetComponent<BoxCollider2D>();
-                    box.size = new Vector2(System.Convert.ToSingle(0.14099885), System.Convert.ToSingle(0.4085822));
-                }
+                box = GetComponent<BoxCollider2D>();
+                box.size = new Vector2(System.Convert.ToSingle(0.1409988), System.Convert.ToSingle(0.27));
+                GetComponent<Rigidbody2D>().velocity = new Vector2(moveHorizontal * maxSpeed / 2, GetComponent<Rigidbody2D>().velocity.y);
             }
+            else
+            {
+                GetComponent<Rigidbody2D>().velocity = new Vector2(moveHorizontal * maxSpeed, GetComponent<Rigidbody2D>().velocity.y);
+                box = this.GetComponent<BoxCollider2D>();
+                box.size = new Vector2(System.Convert.ToSingle(0.14099885), System.Convert.ToSingle(0.4085822));
+            }
+            //}
         }
 
         // Замедление при толкании ящика 
         if (isBoxPushig)
         {
-            GetComponent<Rigidbody2D>().velocity = new Vector2(moveHorizontal * maxSpeed/2, GetComponent<Rigidbody2D>().velocity.y);
+            GetComponent<Rigidbody2D>().velocity = new Vector2(moveHorizontal * maxSpeed / 2, GetComponent<Rigidbody2D>().velocity.y);
         }
         else
         {
             GetComponent<Rigidbody2D>().velocity = new Vector2(moveHorizontal * maxSpeed, GetComponent<Rigidbody2D>().velocity.y);
         }
-
-    
-        // Работа с гарпуном 
-        if (moveHorizontal < 0f || moveHorizontal > 0f) 
-        {
-            anim.SetFloat("Speed", Mathf.Abs(moveHorizontal));
-            if (isSwinging)
-            {
-                anim.SetBool("IsSwinging", true);
-                // 1 - получаем нормализованный вектор направления от игрока к точке крюка
-                var playerToHookDirection = (ropeHook - (Vector2)transform.position).normalized;
-
-                // 2 - Инвертируем направление, чтобы получить перпендикулярное направление
-                Vector2 perpendicularDirection;
-                if (moveHorizontal < 0)
-                {
-                    perpendicularDirection = new Vector2(-playerToHookDirection.y, playerToHookDirection.x);
-                    var leftPerpPos = (Vector2)transform.position - perpendicularDirection * -2f;
-                    Debug.DrawLine(transform.position, leftPerpPos, Color.green, 0f);
-                }
-                else
-                {
-                    perpendicularDirection = new Vector2(playerToHookDirection.y, -playerToHookDirection.x);
-                    var rightPerpPos = (Vector2)transform.position + perpendicularDirection * 2f;
-                    Debug.DrawLine(transform.position, rightPerpPos, Color.green, 0f);
-                }
-
-                var force = perpendicularDirection * swingForce;
-                rb2d.AddForce(force, ForceMode2D.Force);
-            }
-        }
-        if (!isSwinging)
-        {
-            if (!groundCheck) return;
-
-            isJumping = jumpInput > 0f;
-            if (isJumping)
-            {
-                rb2d.velocity = new Vector2(rb2d.velocity.x, jumpSpeed);
-            }
-        }
-
     }
+    
+    //    // Работа с гарпуном 
+    //    if (moveHorizontal < 0f || moveHorizontal > 0f) 
+    //    {
+    //        anim.SetFloat("Speed", Mathf.Abs(moveHorizontal));
+    //        if (isSwinging)
+    //        {
+    //            anim.SetBool("IsSwinging", true);
+    //            // 1 - получаем нормализованный вектор направления от игрока к точке крюка
+    //            var playerToHookDirection = (ropeHook - (Vector2)transform.position).normalized;
+
+    //            // 2 - Инвертируем направление, чтобы получить перпендикулярное направление
+    //            Vector2 perpendicularDirection;
+    //            if (moveHorizontal < 0)
+    //            {
+    //                perpendicularDirection = new Vector2(-playerToHookDirection.y, playerToHookDirection.x);
+    //                var leftPerpPos = (Vector2)transform.position - perpendicularDirection * -2f;
+    //                Debug.DrawLine(transform.position, leftPerpPos, Color.green, 0f);
+    //            }
+    //            else
+    //            {
+    //                perpendicularDirection = new Vector2(playerToHookDirection.y, -playerToHookDirection.x);
+    //                var rightPerpPos = (Vector2)transform.position + perpendicularDirection * 2f;
+    //                Debug.DrawLine(transform.position, rightPerpPos, Color.green, 0f);
+    //            }
+
+    //            var force = perpendicularDirection * swingForce;
+    //            rb2d.AddForce(force, ForceMode2D.Force);
+    //        }
+    //    }
+    //    if (!isSwinging)
+    //    {
+    //        if (!groundCheck) return;
+
+    //        isJumping = jumpInput > 0f;
+    //        if (isJumping)
+    //        {
+    //            rb2d.velocity = new Vector2(rb2d.velocity.x, jumpSpeed);
+    //        }
+    //    }
+
+    //}
 
     private void Update()
     {
@@ -302,11 +301,11 @@ public class Player : Unit
                     Активное_Оружие = ActiveWeapon.Лук;
                     break;
                 case ActiveWeapon.Лук:
-                    Активное_Оружие = ActiveWeapon.Гарпун;
-                    break;
-                case ActiveWeapon.Гарпун:
                     Активное_Оружие = ActiveWeapon.Меч;
                     break;
+                //case ActiveWeapon.Гарпун:
+                //    Активное_Оружие = ActiveWeapon.Меч;
+                //    break;
             }
             ChangeWeapon(Активное_Оружие);
         }
