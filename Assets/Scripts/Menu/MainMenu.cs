@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour {
-
+    
+        public GameObject ExitMenu;
     public void OnClickStart()
     {
         SceneManager.LoadScene(1);
@@ -15,7 +16,17 @@ public class MainMenu : MonoBehaviour {
     }
     public void OnClickExit()
     {
-        Application.Quit();
+        ExitMenu.SetActive(true);
     }
-   
+    public void OnClickClose()
+    {
+        ExitMenu.SetActive(false);
+    }
+    void Update()
+    {
+        if  (Input.GetKeyDown(KeyCode.Escape))
+        {
+            ExitMenu.SetActive(true);
+        }
+    }
 }

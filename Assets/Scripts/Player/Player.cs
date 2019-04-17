@@ -37,12 +37,12 @@ public class Player : Unit
     {
         Лук,          // Лук 
         Меч,          // Меч
-        //Гарпун        // Гарпун
+        Гарпун        // Гарпун
     }
     public ActiveWeapon Активное_Оружие;            // Активное оружие
     private PlayerAttack attack;                    // Скрипт на владение мечем
     private ArcherControl archer;                   // Скрипт на владение луком
-    //private RopeSystem rope;                        // Скрипт на владение гарпуном
+    private RopeSystem rope;                        // Скрипт на владение гарпуном
 
     private float shootCooldown;
     private float dieCooldown;
@@ -56,7 +56,7 @@ public class Player : Unit
     public LayerMask whatIsBarrier;
     private bool isPress = false;                   // 
     //public bool isWater = false;                  // В воде
-    public bool groundCheck;
+
     private float groundAngle = 0;
     public Transform ground;
 
@@ -66,13 +66,14 @@ public class Player : Unit
     [Header("Подключаемые эффекты")]
     public GameObject HPRestore;
     public GameObject BloodsEffect;
-    //[Header("Переменые для гарпуна")]
-    //public Vector2 ropeHook;
-    //public float swingForce = 6f;
-    //public bool isSwinging;
-    //private float jumpInput;
-    //public float jumpSpeed = 3f;
-    //private bool isJumping;
+    [Header("Переменые для гарпуна")]
+    public Vector2 ropeHook;
+    public float swingForce = 6f;
+    public bool isSwinging;
+    private float jumpInput;
+    public float jumpSpeed = 3f;
+    private bool isJumping;
+    public bool groundCheck;
     [Header("Скрипты на восстановление положения объектов")]
     public ResetState RSVaz;
     public ResetState RSBox;
@@ -95,7 +96,7 @@ public class Player : Unit
         LivesText.text = "Lives: " + Lives.ToString();
         attack = gameObject.GetComponent<PlayerAttack>();
         archer = gameObject.GetComponent<ArcherControl>();
-        //rope = gameObject.GetComponent<RopeSystem>();
+        rope = gameObject.GetComponent<RopeSystem>();
         Bow.transform.position = WeaponPoint.transform.position;
         Sword.transform.position = WeaponPoint.transform.position;
         ChangeWeapon(Активное_Оружие);
@@ -111,8 +112,8 @@ public class Player : Unit
             archer.enabled = true;
             Bow.SetActive(true);
             archer.AimLine.SetActive(true);
-            //rope.enabled = false;
-            //rope.ResetRope();
+            rope.enabled = false;
+            rope.ResetRope();
         }
         if (Активное_Оружие == ActiveWeapon.Меч)
         {
@@ -121,18 +122,18 @@ public class Player : Unit
             archer.enabled = false;
             Bow.SetActive(false);
             archer.AimLine.SetActive(false);
-            //rope.enabled = false;
-            //rope.ResetRope();
+            rope.enabled = false;
+            rope.ResetRope();
         }
-        //if (Активное_Оружие == ActiveWeapon.Гарпун)
-        //{
-        //    attack.enabled = false;
-        //    archer.enabled = false;
-        //    Bow.SetActive(false);
-        //    Sword.SetActive(false);
-        //    archer.AimLine.SetActive(false);
-        //    rope.enabled = true;
-        //}
+        if (Активное_Оружие == ActiveWeapon.Гарпун)
+        {
+            attack.enabled = false;
+            archer.enabled = false;
+            Bow.SetActive(false);
+            Sword.SetActive(false);
+            archer.AimLine.SetActive(false);
+            rope.enabled = true;
+        }
     }
 
     /// <summary>
@@ -141,6 +142,108 @@ public class Player : Unit
     /// </summary>
     private void FixedUpdate()
     {
+        RaycastHit2D hitLeft = Physics2D.Raycast(transform.position, Vector2.left, BarrierNear, whatIsBarrier);
+        RaycastHit2D hitLeft2 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y - 0.23f, transform.position.z), Vector2.left, BarrierNear, whatIsBarrier);
+        RaycastHit2D hitLeft3 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y + 0.18f, transform.position.z), Vector2.left, BarrierNear, whatIsBarrier);
+        RaycastHit2D hitLeft4 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y - 0.11f, transform.position.z), Vector2.left, BarrierNear, whatIsBarrier);
+        RaycastHit2D hitLeft5 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y + 0.09f, transform.position.z), Vector2.left, BarrierNear, whatIsBarrier);
+        //RaycastHit2D hitLeftBox = Physics2D.Raycast(transform.position, Vector2.left, -0.12f, whatIsBox);
+        Debug.DrawRay(transform.position, BarrierNear * Vector2.left);
+        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y - 0.23f, transform.position.z), BarrierNear * Vector2.left);
+        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y + 0.18f, transform.position.z), BarrierNear * Vector2.left);
+        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y - 0.11f, transform.position.z), BarrierNear * Vector2.left);
+        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y + 0.09f, transform.position.z), BarrierNear * Vector2.left);
+        if (hitLeft.collider != null)
+        {
+            if (!groundCheck && moveHorizontal > 0f)
+            {
+                moveHorizontal = 0;
+            }
+        }
+        if (hitLeft2.collider != null)
+        {
+            if (!groundCheck && moveHorizontal > 0f)
+            {
+                moveHorizontal = 0;
+            }
+        }
+        if (hitLeft3.collider != null)
+        {
+            if (!groundCheck && moveHorizontal > 0f)
+            {
+                moveHorizontal = 0;
+            }
+        }
+        if (hitLeft4.collider != null)
+        {
+            if (!groundCheck && moveHorizontal > 0f)
+            {
+                moveHorizontal = 0;
+            }
+        }
+        if (hitLeft5.collider != null)
+        {
+            if (!groundCheck && moveHorizontal > 0f)
+            {
+                moveHorizontal = 0;
+            }
+        }
+
+        //if (hitLeft3.collider != null)
+        //{
+        //    if (!groundCheck && moveHorizontal > 0f && GetComponent<Rigidbody2D>().velocity.y < 0)
+        //    {
+        //        GetComponent<Rigidbody2D>().velocity = new Vector2(maxSpeed * hitLeft3.normal.x, -maxSpeed);
+        //    }
+        //}
+
+        RaycastHit2D hitRight = Physics2D.Raycast(transform.position, Vector2.right, BarrierNear, whatIsBarrier);
+        RaycastHit2D hitRight2 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y - 0.23f, transform.position.z), Vector2.right, BarrierNear, whatIsBarrier);
+        RaycastHit2D hitRight3 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y + 0.18f, transform.position.z), Vector2.right, BarrierNear, whatIsBarrier);
+        RaycastHit2D hitRight4 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y - 0.11f, transform.position.z), Vector2.right, BarrierNear, whatIsBarrier);
+        RaycastHit2D hitRight5 = Physics2D.Raycast(new Vector3(transform.position.x, transform.position.y + 0.09f, transform.position.z), Vector2.right, BarrierNear, whatIsBarrier);
+        //RaycastHit2D hitRightBox = Physics2D.Raycast(transform.position, Vector2.right, -0.12f, whatIsBox);
+        Debug.DrawRay(transform.position, BarrierNear * Vector2.right);
+        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y - 0.23f, transform.position.z), BarrierNear * Vector2.right);
+        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y + 0.18f, transform.position.z), BarrierNear * Vector2.right);
+        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y - 0.11f, transform.position.z), BarrierNear * Vector2.right);
+        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y + 0.09f, transform.position.z), BarrierNear * Vector2.right);
+
+        if (hitRight.collider != null)
+        {
+            if (!groundCheck && moveHorizontal < 0f)
+            {
+                moveHorizontal = 0;
+            }
+        }
+        if (hitRight2.collider != null)
+        {
+            if (!groundCheck && moveHorizontal < 0f)
+            {
+                moveHorizontal = 0;
+            }
+        }
+        if (hitRight3.collider != null)
+        {
+            if (!groundCheck && moveHorizontal < 0f)
+            {
+                moveHorizontal = 0;
+            }
+        }
+        if (hitRight4.collider != null)
+        {
+            if (!groundCheck && moveHorizontal < 0f)
+            {
+                moveHorizontal = 0;
+            }
+        }
+        if (hitRight5.collider != null)
+        {
+            if (!groundCheck && moveHorizontal < 0f)
+            {
+                moveHorizontal = 0;
+            }
+        }
 
         //определяем, на земле ли персонаж
         isGrounded = Physics2D.OverlapBox(ground.position, new Vector2(System.Convert.ToSingle(0.02), System.Convert.ToSingle(0.1)), groundAngle, whatIsGround);
@@ -151,91 +254,86 @@ public class Player : Unit
         anim.SetBool("Ground", isGrounded);
         //устанавливаем в аниматоре значение скорости взлета/падения
         anim.SetFloat("vSpeed", rb2d.velocity.y);
-        anim.SetBool("Press", isPress /*&& !isSwinging*/ && isGrounded && !isBoxPushig);
+        anim.SetBool("Press", isPress && !isSwinging && isGrounded && !isBoxPushig);
+        //используем Input.GetAxis для оси Х. метод возвращает значение оси в пределах от -1 до 1.
 
+
+
+        //в компоненте анимаций изменяем значение параметра Speed на значение оси Х.
+        //приэтом нам нужен модуль значения
+
+        //обращаемся к компоненту персонажа RigidBody2D. задаем ему скорость по оси Х, 
+        //равную значению оси Х умноженное на значение макс. скорости
+        //Debug.Log(rb2d.velocity.x);
         //если нажали клавишу для перемещения вправо, а персонаж направлен влево
-        if ((moveHorizontal != 0) && (Mathf.Sign(moveHorizontal) != Mathf.Sign(transform.localScale.x)) && !isBoxPushig)
-        //отражаем персонажа вправо
-        {
+        if ((moveHorizontal != 0) && (Mathf.Sign(moveHorizontal) != Mathf.Sign(transform.localScale.x)))
+            //отражаем персонажа вправо
             Flip();
-        }
+        //приседание
 
         if (Input.GetButtonDown("Fire1")) Shoot();
         if (Input.GetButtonUp("Fire1")) DontAttack();
-
-        //Код для приседания персонажа 
-        //if (!isSwinging)
-        //{
-        rb2d.velocity = new Vector2(moveHorizontal * maxSpeed, GetComponent<Rigidbody2D>().velocity.y);
-        if (isGrounded && !isBoxPushig)
+        //uгарпун
+        if (!isSwinging)
         {
-            if (isGrounded && Input.GetKey(KeyCode.S) /*&& !isSwinging*/)
+            rb2d.velocity = new Vector2(moveHorizontal * maxSpeed, GetComponent<Rigidbody2D>().velocity.y);
+            if (isGrounded && !isBoxPushig)
             {
-                box = GetComponent<BoxCollider2D>();
-                box.size = new Vector2(System.Convert.ToSingle(0.1409988), System.Convert.ToSingle(0.27));
-                GetComponent<Rigidbody2D>().velocity = new Vector2(moveHorizontal * maxSpeed / 2, GetComponent<Rigidbody2D>().velocity.y);
+
+                if (isGrounded && Input.GetKey(KeyCode.S) && !isSwinging)
+                {
+                    box = GetComponent<BoxCollider2D>();
+                    box.size = new Vector2(System.Convert.ToSingle(0.1409988), System.Convert.ToSingle(0.27));
+                    GetComponent<Rigidbody2D>().velocity = new Vector2(moveHorizontal * maxSpeed / 2, GetComponent<Rigidbody2D>().velocity.y);
+                }
+                else
+                {
+                    GetComponent<Rigidbody2D>().velocity = new Vector2(moveHorizontal * maxSpeed, GetComponent<Rigidbody2D>().velocity.y);
+                    box = this.GetComponent<BoxCollider2D>();
+                    box.size = new Vector2(System.Convert.ToSingle(0.14099885), System.Convert.ToSingle(0.4085822));
+                }
             }
-            else
+        }
+        if (moveHorizontal < 0f || moveHorizontal > 0f)
+        {
+            anim.SetFloat("Speed", Mathf.Abs(moveHorizontal));
+            if (isSwinging)
             {
-                GetComponent<Rigidbody2D>().velocity = new Vector2(moveHorizontal * maxSpeed, GetComponent<Rigidbody2D>().velocity.y);
-                box = this.GetComponent<BoxCollider2D>();
-                box.size = new Vector2(System.Convert.ToSingle(0.14099885), System.Convert.ToSingle(0.4085822));
+                anim.SetBool("IsSwinging", true);
+                // 1 - получаем нормализованный вектор направления от игрока к точке крюка
+                var playerToHookDirection = (ropeHook - (Vector2)transform.position).normalized;
+
+                // 2 - Инвертируем направление, чтобы получить перпендикулярное направление
+                Vector2 perpendicularDirection;
+                if (moveHorizontal < 0)
+                {
+                    perpendicularDirection = new Vector2(-playerToHookDirection.y, playerToHookDirection.x);
+                    var leftPerpPos = (Vector2)transform.position - perpendicularDirection * -2f;
+                    Debug.DrawLine(transform.position, leftPerpPos, Color.green, 0f);
+                }
+                else
+                {
+                    perpendicularDirection = new Vector2(playerToHookDirection.y, -playerToHookDirection.x);
+                    var rightPerpPos = (Vector2)transform.position + perpendicularDirection * 2f;
+                    Debug.DrawLine(transform.position, rightPerpPos, Color.green, 0f);
+                }
+
+                var force = perpendicularDirection * swingForce;
+                rb2d.AddForce(force, ForceMode2D.Force);
             }
-            //}
         }
 
-        // Замедление при толкании ящика 
-        if (isBoxPushig)
+        if (!isSwinging)
         {
-            GetComponent<Rigidbody2D>().velocity = new Vector2(moveHorizontal * maxSpeed / 2, GetComponent<Rigidbody2D>().velocity.y);
-        }
-        else
-        {
-            GetComponent<Rigidbody2D>().velocity = new Vector2(moveHorizontal * maxSpeed, GetComponent<Rigidbody2D>().velocity.y);
+            if (!groundCheck) return;
+
+            isJumping = jumpInput > 0f;
+            if (isJumping)
+            {
+                rb2d.velocity = new Vector2(rb2d.velocity.x, jumpSpeed);
+            }
         }
     }
-    
-    //    // Работа с гарпуном 
-    //    if (moveHorizontal < 0f || moveHorizontal > 0f) 
-    //    {
-    //        anim.SetFloat("Speed", Mathf.Abs(moveHorizontal));
-    //        if (isSwinging)
-    //        {
-    //            anim.SetBool("IsSwinging", true);
-    //            // 1 - получаем нормализованный вектор направления от игрока к точке крюка
-    //            var playerToHookDirection = (ropeHook - (Vector2)transform.position).normalized;
-
-    //            // 2 - Инвертируем направление, чтобы получить перпендикулярное направление
-    //            Vector2 perpendicularDirection;
-    //            if (moveHorizontal < 0)
-    //            {
-    //                perpendicularDirection = new Vector2(-playerToHookDirection.y, playerToHookDirection.x);
-    //                var leftPerpPos = (Vector2)transform.position - perpendicularDirection * -2f;
-    //                Debug.DrawLine(transform.position, leftPerpPos, Color.green, 0f);
-    //            }
-    //            else
-    //            {
-    //                perpendicularDirection = new Vector2(playerToHookDirection.y, -playerToHookDirection.x);
-    //                var rightPerpPos = (Vector2)transform.position + perpendicularDirection * 2f;
-    //                Debug.DrawLine(transform.position, rightPerpPos, Color.green, 0f);
-    //            }
-
-    //            var force = perpendicularDirection * swingForce;
-    //            rb2d.AddForce(force, ForceMode2D.Force);
-    //        }
-    //    }
-    //    if (!isSwinging)
-    //    {
-    //        if (!groundCheck) return;
-
-    //        isJumping = jumpInput > 0f;
-    //        if (isJumping)
-    //        {
-    //            rb2d.velocity = new Vector2(rb2d.velocity.x, jumpSpeed);
-    //        }
-    //    }
-
-    //}
 
     private void Update()
     {
@@ -255,11 +353,10 @@ public class Player : Unit
             Jump();
         }
         // jumpInput = Input.GetAxis("Jump");
+        Physics2D.queriesStartInColliders = false;
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.right * transform.localScale.x, distance, boxMask);
 
-        // Таскание ящика
-        Physics2D.queriesStartInColliders = false; 
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.right * transform.localScale.x, distance, boxMask); // Луч для обнаружения ящика
-        if (hit.collider != null && hit.collider.gameObject.tag == "Box" && Input.GetKeyDown(KeyCode.E) && !Input.GetKey(KeyCode.S)) // Условия для передвежения ящика
+        if (hit.collider != null && hit.collider.gameObject.tag == "Box" && Input.GetKeyDown(KeyCode.E) && !Input.GetKey(KeyCode.S))
         {
             Box = hit.collider.gameObject;
             Box.GetComponent<FixedJoint2D>().connectedBody = this.GetComponent<Rigidbody2D>();
@@ -273,7 +370,6 @@ public class Player : Unit
             isBoxPushig = false;
             //box.GetComponent<boxpull>().beingPushed = false;
         }
-
 
         moveHorizontal = Input.GetAxis("Horizontal");
         var halfHeight = transform.GetComponent<SpriteRenderer>().bounds.extents.y;
@@ -301,11 +397,11 @@ public class Player : Unit
                     Активное_Оружие = ActiveWeapon.Лук;
                     break;
                 case ActiveWeapon.Лук:
+                    Активное_Оружие = ActiveWeapon.Гарпун;
+                    break;
+                case ActiveWeapon.Гарпун:
                     Активное_Оружие = ActiveWeapon.Меч;
                     break;
-                //case ActiveWeapon.Гарпун:
-                //    Активное_Оружие = ActiveWeapon.Меч;
-                //    break;
             }
             ChangeWeapon(Активное_Оружие);
         }
