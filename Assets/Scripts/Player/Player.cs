@@ -114,6 +114,7 @@ public class Player : Unit
             archer.AimLine.SetActive(true);
             rope.enabled = false;
             rope.ResetRope();
+            rope.crosshairSprite.enabled = false;
         }
         if (Активное_Оружие == ActiveWeapon.Меч)
         {
@@ -124,6 +125,7 @@ public class Player : Unit
             archer.AimLine.SetActive(false);
             rope.enabled = false;
             rope.ResetRope();
+            rope.crosshairSprite.enabled = false;
         }
         if (Активное_Оружие == ActiveWeapon.Гарпун)
         {
@@ -133,6 +135,7 @@ public class Player : Unit
             Sword.SetActive(false);
             archer.AimLine.SetActive(false);
             rope.enabled = true;
+            rope.crosshairSprite.enabled = true;
         }
     }
 

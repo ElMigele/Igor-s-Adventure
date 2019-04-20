@@ -25,6 +25,7 @@ public class ArcherControl : MonoBehaviour {
     [HideInInspector]public Bow BowScript;
     void Start ()
     {
+
         BowScript = gameObject.GetComponentInChildren<Bow>();
         Velocity = BowScript.minVel;
         Forward = 3*Vector3.right;
@@ -116,6 +117,9 @@ public class ArcherControl : MonoBehaviour {
                 transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);                
             }
             AimLine.transform.rotation = Quaternion.Euler(0, 0, aimAngle * Mathf.Rad2Deg);
+            var aimAngle3 = aimAngle - 89.6f;
+            var aimAngle4 = 180;
+            BowScript.transform.rotation = Quaternion.Euler(aimAngle4, aimAngle4, aimAngle3 * Mathf.Rad2Deg);
 
             /*// Стрельба на отпускаение правой клавиши
             if ((Vector2.Distance(AimPoints[0], AimPoints[1]) >= Len2Vel.y) ||
@@ -179,6 +183,7 @@ public class ArcherControl : MonoBehaviour {
                 ChangeDirection = !ChangeDirection;
             }            
             AimLine.transform.Rotate(Vector3.forward, -AimLine.transform.localEulerAngles.z);
+            BowScript.transform.Rotate(Vector3.forward, -AimLine.transform.localEulerAngles.z);
             AimLine.gameObject.SetActive(false);
         }
         mouseMotion = Vector2.zero;
