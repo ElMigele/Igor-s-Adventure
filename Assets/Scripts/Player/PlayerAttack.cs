@@ -21,7 +21,7 @@ public class PlayerAttack : MonoBehaviour
                 for (int i = 0; i < enemiesToDamage.Length; i++)
                 {
                     Sword WeaponScript = gameObject.GetComponentInParent<Player>().Sword.GetComponent<Sword>();
-                    enemiesToDamage[i].GetComponent<Unit>().ReceiveDamage(WeaponScript.damage); 
+                    enemiesToDamage[i].GetComponent<MoveableMonster>().ReceiveDamage(damage); 
                 }
             timeAttack = startTimeAttack;
             }

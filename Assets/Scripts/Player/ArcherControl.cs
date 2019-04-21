@@ -60,8 +60,10 @@ public class ArcherControl : MonoBehaviour {
 
     private void ChargeAndFire()
     {
-        //AimPosition = new Vector3(transform.position.x, transform.position.y);
-        if (Input.GetMouseButton(1))
+
+      
+            //AimPosition = new Vector3(transform.position.x, transform.position.y);
+            if (Input.GetMouseButton(1))
         {
             AimLine.gameObject.SetActive(true);
             mouseMotion.x += Input.GetAxis("Mouse X") * mouseSens;
@@ -106,7 +108,7 @@ public class ArcherControl : MonoBehaviour {
             var facingDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
             var aimAngle = Mathf.Atan2(facingDirection.y, facingDirection.x);
             var aimAngle2 = aimAngle * Mathf.Rad2Deg;
-            Debug.Log(aimAngle2);
+            //Debug.Log(aimAngle2);
             if (aimAngle < 0f)
             {
                 aimAngle = Mathf.PI * 2 + aimAngle;
@@ -151,7 +153,7 @@ public class ArcherControl : MonoBehaviour {
                     {
 
                         Velocity += BowScript.delVel * Time.deltaTime;
-                        Debug.Log("Скорость: " + Velocity);
+                        //Debug.Log("Скорость: " + Velocity);
                         HealthEnergyBar.use.AdjustCurrentEnergy(Velocity * Time.deltaTime * 15);
                     }
 

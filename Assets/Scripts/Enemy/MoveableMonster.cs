@@ -239,7 +239,7 @@ public class MoveableMonster : Monster
         }
         if (currentHP == 0)
         {
-            Die();
+            Destroy(gameObject);
             ShowHP.transform.SetParent(transform, true);
         }
         if (currentHP == 1)

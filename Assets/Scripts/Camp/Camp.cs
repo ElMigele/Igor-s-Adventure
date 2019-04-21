@@ -16,6 +16,10 @@ public class Camp : MonoBehaviour
             BG.SetActive(false);
             Panel.SetActive(false);
         }
+        else if (BG.activeSelf == false && Input.GetKeyDown(KeyCode.Escape))
+        {
+            SceneManager.LoadScene(0);
+        }
 
     }
     public void OnClickStart()

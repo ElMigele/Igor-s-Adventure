@@ -5,7 +5,7 @@ public class Unit : MonoBehaviour
 {
     public virtual void ReceiveDamage(int damage)
     {
-        Die();
+        Destroy(gameObject);
     }
 
     protected virtual void Die()
