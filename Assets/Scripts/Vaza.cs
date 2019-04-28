@@ -7,6 +7,7 @@ public class Vaza : Unit
     public float Lives = 1; 
     public GameObject Gold;
     public GameObject FragmentEffect;
+    public int costExperience = 4;         // Дает опыта за свое уничтожение
     void Start()
     {
     }
@@ -18,7 +19,7 @@ public class Vaza : Unit
     public override void ReceiveDamage(int damage)
     {
         Lives -= damage;
-        if (Lives < 0)
+        if (Lives <= 0)
         {
             var p = transform.position;
             Instantiate(FragmentEffect, new Vector3(p.x, p.y, p.z), Quaternion.identity);
@@ -26,9 +27,10 @@ public class Vaza : Unit
             for (int i = 0; i < count; i++)
             {
                 Instantiate(Gold, new Vector3(p.x, p.y, p.z), Quaternion.identity);
-                
             }
-            Die();
+            PlayerPrefs.SetInt("exp", PlayerPrefs.GetInt("exp") + costExperience/2);
+            PlayerPrefs.Save();
+            Destroy(gameObject);
         }
     }
 }

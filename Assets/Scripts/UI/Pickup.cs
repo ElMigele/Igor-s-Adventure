@@ -6,9 +6,10 @@ public class Pickup : MonoBehaviour
 {
     private Inventory inventory;
     public GameObject itemButton;
+    public GameObject[] heroes;
     private void Start()
     {
-        inventory = GameObject.FindGameObjectWithTag("Player").GetComponent<Inventory>();
+        inventory = heroes[PlayerPrefs.GetInt("h")].GetComponent<Inventory>();
     }
     
     void OnTriggerEnter2D(Collider2D other){

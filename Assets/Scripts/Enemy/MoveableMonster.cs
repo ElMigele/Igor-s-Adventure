@@ -10,6 +10,7 @@ public class MoveableMonster : Monster
     public float speed = 5;                 // Скорость
     public int currentHP = 3;               // Количество жизней
     public int MaxHP = 3;                   // Количество жизней
+    public int costExperience = 40;         // Дает опыта за свое убийство 
     private Vector3 direction;              // Вектор направления
     private float dieCooldown;              // 
     private float dieRate = 0.3f;           //
@@ -22,7 +23,7 @@ public class MoveableMonster : Monster
     public Transform metka;
     public Camera Mycamera;
     public GameObject BloodsEffect;
-
+    public Player player;                   // Скрипт игрока
     Slider ShowHP;
     // Параметры из EnemyBehaivour
     public enum Attack
@@ -55,6 +56,7 @@ public class MoveableMonster : Monster
     
     public GameObject ImpactZone;
     public GameObject VisibilityZone;
+    public GameObject VisibilityZone2;
 
     private EnemyVisibility EnemyVisibility;// Скрипт видимости
     private EnemyImpact EnemyImpact;        // Скрипт зоны нападения
@@ -140,7 +142,8 @@ public class MoveableMonster : Monster
             // показываем текущие здоровье на полосе хп
             ShowHP.value = currentHP;
         }
-    }
+
+        }
 
     private bool CanDie
     {
@@ -193,6 +196,7 @@ public class MoveableMonster : Monster
         {
             if (InVisibilityZone && (Vector3.Distance(PlayerPos, transform.position) > MinDist))
             {
+                transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y, transform.localScale.z);
                 transform.position = Vector3.MoveTowards(transform.position, PlayerPos, speed * Time.deltaTime);
             }
         }
@@ -237,8 +241,10 @@ public class MoveableMonster : Monster
             var p = transform.position;
             Instantiate(BloodsEffect, new Vector3(p.x, p.y, p.z), Quaternion.identity);
         }
-        if (currentHP == 0)
+        if (currentHP <= 0)
         {
+            PlayerPrefs.SetInt("exp", PlayerPrefs.GetInt("exp") + costExperience/2);
+            PlayerPrefs.Save();
             Destroy(gameObject);
             ShowHP.transform.SetParent(transform, true);
         }

@@ -6,17 +6,17 @@ public class Slots : MonoBehaviour{
     
 private Inventory inventory;
 public int i;
-
-private void Start()
-{
-    inventory = GameObject.FindGameObjectWithTag("Player").GetComponent<Inventory>();
-}
-
-public void Update()
-{
-    if (transform.childCount <=0){
-        inventory.isFull[i] = false;
+public GameObject[] heroes;
+    private void Start()
+    {
+        inventory = heroes[PlayerPrefs.GetInt("h")].GetComponent<Inventory>();
     }
+    public void Update()
+{
+            if (transform.childCount <= 0)
+            {
+                inventory.isFull[i] = false;
+            }
     if (Input.GetKeyDown(KeyCode.Q))
         {
             DropItem();

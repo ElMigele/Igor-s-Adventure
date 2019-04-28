@@ -9,12 +9,14 @@ public class Interface : MonoBehaviour {
     public SmoothCamera camera;
     public GameObject[] heroes;
     public bool isPaused;
-	// Use this for initialization
-	void Start () {
+    public Player player;
+    // Use this for initialization
+    void Start () {
         heroes[PlayerPrefs.GetInt("h")].SetActive(true);
         camera.target = heroes[PlayerPrefs.GetInt("h")].transform;
         isPaused = false;
-}
+        player = heroes[PlayerPrefs.GetInt("h")].GetComponent<Player>(); ;
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -38,8 +40,10 @@ public class Interface : MonoBehaviour {
         Time.timeScale = 1;
         isPaused = false;
     }
-
-
+    public void Restart()
+    {
+        player.Restart();
+    }
     public void OnClickExit()
     {
         Time.timeScale = 1;

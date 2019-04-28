@@ -7,19 +7,25 @@ using System;
 public class Player : Unit
 {
     [Header("Ссылки на интерфейс")]
-    public Text countText;                          // Количество золота, имеющееся у игрока
+    public Text coinText;                          // Количество золота, имеющееся у игрока
+    public Text expText;                          // Количество опыта
+    public Text levelText;                          // уровень
     public Text LivesText;                          // Количество жизней, оставшихся у игрока
+    [HideInInspector]
     public HealthEnergyBar HE;                      // Полосы здороья и силы натяжения лука у героя
     [Header("Параметры игрока")]
     [Range(0.1f, 5)]
-    public float maxSpeed = 1f;     // Максимальная скорость игрока
+    public float maxSpeed = 1f;                     // Максимальная скорость игрока
+    public float hightJump = 920;                   // Высота прыжка
     [Range(1, 100)]
-    public int MaxLives = 100;      // Максимальное количество жизней игрока
-    public int Lives;                               // Количество жизней
+    public int Lives;                               // Количество жизней    
+    [HideInInspector]
+    public int MaxLives;                           // Максимальное количество жизней игрока
+    private int Level = 1;                           // Уровень персонажа
     [NonSerialized]
     public int count;                               // Счетчик золота
-    public int RandomR;                             // Случайное число
-    public float BarrierNear = -0.085f;
+    private int RandomR;                            // Случайное число
+    private float BarrierNear = -0.085f;            // Растояние на котором можно таскать ящик
     [Header("Анимация")]
     private Animator anim;                          // Анимация
     private Rigidbody2D rb2d;                       // Твердое тело игрока
@@ -44,9 +50,7 @@ public class Player : Unit
     private ArcherControl archer;                   // Скрипт на владение луком
     private RopeSystem rope;                        // Скрипт на владение гарпуном
 
-    private float shootCooldown;
     private float dieCooldown;
-    private float shotingRate = 0.45f;
     private float dieRate = 0.3f;
 
     [Header("Проверки на состояние")]
@@ -88,9 +92,8 @@ public class Player : Unit
         anim = GetComponent<Animator>();
         rb2d = GetComponent<Rigidbody2D>();
         sprite = GetComponentInChildren<SpriteRenderer>();
-        shootCooldown = 0f;
         dieCooldown = 0f;
-        SetCountText();
+        SetCountText(); 
         HealthEnergyBar.use.AdjustCurrentEnergy(-150);
         Lives = MaxLives;
         LivesText.text = "Lives: " + Lives.ToString();
@@ -101,6 +104,13 @@ public class Player : Unit
         Sword.transform.position = WeaponPoint.transform.position;
         ChangeWeapon(Активное_Оружие);
         BarrierNear = -0.085f;
+
+        if (!PlayerPrefs.HasKey("exp"))
+        {
+            PlayerPrefs.SetInt("exp", 0);
+            PlayerPrefs.Save();
+        }
+        expText.text = "exp " + PlayerPrefs.GetInt("exp").ToString() + "/" + (100 * Level + Level * 20);
     }
 
     private void ChangeWeapon(ActiveWeapon активноeOружие)
@@ -274,8 +284,6 @@ public class Player : Unit
             Flip();
         //приседание
 
-        if (Input.GetButtonDown("Fire1")) Shoot();
-        if (Input.GetButtonUp("Fire1")) DontAttack();
         //uгарпун
         if (!isSwinging)
         {
@@ -340,12 +348,19 @@ public class Player : Unit
 
     private void Update()
     {
-        SelectWeapon();
-
-        if (shootCooldown > 0)
+        if (PlayerPrefs.GetInt("exp") >= 100 * Level + Level * 20)  // увеличение уровня персонажа/ прокачка 
         {
-            shootCooldown -= Time.deltaTime;
-        }
+            int x = PlayerPrefs.GetInt("exp") - (100 * Level + Level * 20);
+            PlayerPrefs.SetInt("exp", x);
+            PlayerPrefs.Save();
+            Level++;
+            SetCountText();
+            MaxLives = MaxLives + Level * 10;
+            Lives = MaxLives;
+}
+        SetCountText();
+
+        SelectWeapon();
         if (dieCooldown > 0)
         {
             dieCooldown -= Time.deltaTime;
@@ -378,18 +393,26 @@ public class Player : Unit
         var halfHeight = transform.GetComponent<SpriteRenderer>().bounds.extents.y;
         groundCheck = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y - halfHeight - 0.1f), Vector2.down, 0.025f);
         Debug.DrawRay(new Vector2(transform.position.x, transform.position.y - halfHeight - 0.1f), Vector2.down);
-        if (Input.GetKeyDown(KeyCode.R))
+        Restart();
+    }
+    public void Restart()
+    {
+        if (Input.GetKeyDown(KeyCode.R)) // рестарт 
         {
+            PlayerPrefs.DeleteAll(); // сброс PLayers.Prefas уровня и опыта
+            MaxLives = 100;
             Lives = MaxLives;
             HealthEnergyBar.use.AdjustCurrentHealth(100);
             HealthEnergyBar.use.AdjustCurrentEnergy(-150);
             LivesText.text = "Lives: " + Lives.ToString();
             rb2d.position = RespawnPoint.position;
             RSBox.ResetPosition();
+            Level = 1;
+            PlayerPrefs.SetInt("exp", 0);
+            PlayerPrefs.Save();
+            MaxLives = 100;
         }
-
     }
-
     private void SelectWeapon()
     {
         if (Input.GetKeyDown(KeyCode.Tab))
@@ -417,41 +440,12 @@ public class Player : Unit
         rb2d = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
     }
-
     /// <summary>
     /// Метод для смены направления движения персонажа и его зеркального отражения
     /// </summary>
     private void Flip()
     {
         transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
-    }
-
-    private void Shoot()
-    {
-        if (Mathf.Sign(transform.localScale.x) > 0)
-        {
-            Sword.transform.eulerAngles = new Vector3(0, 0, 180);
-        }
-        else
-        {
-            Sword.transform.eulerAngles = new Vector3(0, 0, 90);
-        }
-    }
-
-    public void DontAttack()
-    {
-        if (Mathf.Sign(transform.localScale.x) > 0)
-            Sword.transform.eulerAngles = new Vector3(0, 0, 270);
-        else
-            Sword.transform.eulerAngles = new Vector3(0, 0, 180);
-    }
-
-    public bool CanAttack
-    {
-        get
-        {
-            return shootCooldown <= 0f;
-        }
     }
 
     private bool CanDie
@@ -467,7 +461,7 @@ public class Player : Unit
         //устанавливаем в аниматоре переменную в false
         anim.SetBool("Ground", false);
         //прикладываем силу вверх, чтобы персонаж подпрыгнул
-        rb2d.AddForce(new Vector2(0, 920));
+        rb2d.AddForce(new Vector2(0, hightJump));
     }
 
     public override void ReceiveDamage(int damage)
@@ -506,7 +500,9 @@ public class Player : Unit
 
     public void SetCountText()
     {
-        countText.text = "Gold: " + count.ToString();
+        coinText.text = "Gold: " + count.ToString();
+        expText.text = "exp " + PlayerPrefs.GetInt("exp").ToString() + "/" + (100 * Level + Level * 20);
+        levelText.text = "Level " + Level.ToString();
     }
 
     //void OnDrawGizmos()

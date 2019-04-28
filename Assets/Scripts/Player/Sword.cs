@@ -7,6 +7,7 @@ public class Sword : MonoBehaviour {
     [Range(1, 20)]
     public int damage = 1;
     private Collider2D ourCollider;
+    public Animator anim;    // Анимация 
     private float timer;
     [Range(0.1f, 2)]
     public float delayTimer = 1;
@@ -15,8 +16,9 @@ public class Sword : MonoBehaviour {
 	void Start ()
     {
         ourCollider = transform.GetComponent<Collider2D>();
+        anim = GetComponent<Animator>();
         timer = delayTimer;
-	}
+    }
 	
 	// Update is called once per frame
 	void Update ()
@@ -25,7 +27,12 @@ public class Sword : MonoBehaviour {
         {
             timer += Time.deltaTime;
         }
-	}
+    }
+
+    void Awake()
+    {
+        anim = GetComponent<Animator>();
+    }
 
     void Activation(bool InHand)
     {
