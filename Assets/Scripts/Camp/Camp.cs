@@ -3,56 +3,59 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-
+using CodeMonkey.Utils;
 public class Camp : MonoBehaviour
 {
-    public GameObject BG;  // BG
-    public GameObject Panel;
+    public GameObject BGTavern;  // BG tavern
+    public GameObject BGMarketPlace;  // BG market
+    public GameObject TavernPanel;
+    public GameObject MarketPlacePanel;
     public UnityEngine.UI.Button[] HeroButton;
-    void Update()
+    public Text coinText;                          // Количество золота, имеющееся у игрока
+
+    void Start()
     {
-        if (BG.activeSelf == true && Input.GetKeyDown(KeyCode.Escape))
+        if(!PlayerPrefs.HasKey("coin"))
         {
-            BG.SetActive(false);
-            Panel.SetActive(false);
+            PlayerPrefs.SetInt("coin", 0);
+            PlayerPrefs.Save();
         }
-        else if (BG.activeSelf == false && Input.GetKeyDown(KeyCode.Escape))
+    }
+        void Update()
+    {
+        if ((BGTavern.activeSelf == true && Input.GetKeyDown(KeyCode.Escape)) || (BGMarketPlace.activeSelf == true && Input.GetKeyDown(KeyCode.Escape)))
+        {
+            BGTavern.SetActive(false);
+            TavernPanel.SetActive(false);
+            MarketPlacePanel.SetActive(false);
+            BGMarketPlace.SetActive(false);
+        }
+        else if (BGTavern.activeSelf == false && BGMarketPlace.activeSelf == false && Input.GetKeyDown(KeyCode.Escape))
         {
             SceneManager.LoadScene(0);
         }
 
+        coinText.text = "Gold: " + PlayerPrefs.GetInt("coin").ToString();
     }
     public void OnClickStart()
     {
         SceneManager.LoadScene(2);
     }
 
-    public void OnClickHeroButton(int n)
+    public void OnClickTavern()
     {
-        Color savedColor = HeroButton[0].GetComponent<Graphic>().color;
-        Color savedColor1 = HeroButton[1].GetComponent<Graphic>().color;
-        switch (n)
-        {
-            case 0:
-                HeroButton[0].GetComponent<Graphic>().color = Color.red;
-                HeroButton[1].GetComponent<Graphic>().color = savedColor;
-                break;
-            case 1:
-                HeroButton[1].GetComponent<Graphic>().color = Color.red;
-                HeroButton[0].GetComponent<Graphic>().color = savedColor1;
-                break;
-
-        }
-
-        }
-
-    public void OnClickChange()
-    {
-        BG.SetActive(true);
-        Panel.SetActive(true);
+        BGTavern.SetActive(true);
+        TavernPanel.SetActive(true);
+        MarketPlacePanel.SetActive(false);
+        BGMarketPlace.SetActive(false);
     }
-
-
+    public void OnClickMarketPlace()
+    {
+        BGMarketPlace.SetActive(true);
+        MarketPlacePanel.SetActive(true);
+        BGTavern.SetActive(false);
+        TavernPanel.SetActive(false);
+    }
     public void OnClickExit()
     {
         SceneManager.LoadScene(0);

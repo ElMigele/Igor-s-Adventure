@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Linq;
 using UnityEngine.UI;
-using System;
+using CodeMonkey.Utils;
 
 public class MoveableMonster : Monster
 {
@@ -10,6 +10,8 @@ public class MoveableMonster : Monster
     public float speed = 5;                 // Скорость
     public int currentHP = 3;               // Количество жизней
     public int MaxHP = 3;                   // Количество жизней
+    public int monsterDamageMax;           // урон монстра
+    public int monsterDamageMin;
     public int costExperience = 40;         // Дает опыта за свое убийство 
     private Vector3 direction;              // Вектор направления
     private float dieCooldown;              // 
@@ -22,8 +24,11 @@ public class MoveableMonster : Monster
     public Slider EnemyHP;                  // полоска здоровья врага на экране
     public Transform metka;
     public Camera Mycamera;
-    public GameObject BloodsEffect;
+    [SerializeField]
+    private GameObject BloodsEffect;        // Эффект крови
     public Player player;                   // Скрипт игрока
+    public PlayerAttack playerAttack;                   // Скрипт игрока
+
     Slider ShowHP;
     // Параметры из EnemyBehaivour
     public enum Attack
@@ -53,7 +58,8 @@ public class MoveableMonster : Monster
     private float[] PointDelayMassive;      // Массив задержек на точке
     public int PointID = 1;                 // № точки, к которой идет враг
     public float MinDist = 0.5f;            // Допустимое расстояние, при котором враг переключается на следующую точку
-    
+
+
     public GameObject ImpactZone;
     public GameObject VisibilityZone;
     public GameObject VisibilityZone2;
@@ -211,7 +217,7 @@ public class MoveableMonster : Monster
             {
                 Unit unit = EnemyImpact.col.GetComponent<Unit>();
 
-                int damage = UnityEngine.Random.Range(10, 25);
+                int damage = UnityEngine.Random.Range(monsterDamageMin, monsterDamageMax); 
                 if (unit && unit is Player)
                 {
                     unit.ReceiveDamage(damage);
@@ -233,12 +239,12 @@ public class MoveableMonster : Monster
     }
     public override void ReceiveDamage(int damage)
     {
+        var p = transform.position;
         if (CanDie)
         {
             dieCooldown = dieRate;
             dazedTime = startDazedTime;
             currentHP -= damage;
-            var p = transform.position;
             Instantiate(BloodsEffect, new Vector3(p.x, p.y, p.z), Quaternion.identity);
         }
         if (currentHP <= 0)

@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour {
-    
         public GameObject ExitMenu;
     public void OnClickStart()
     {

@@ -51,6 +51,7 @@ public class PickableObject : MonoBehaviour
                 if (player.Lives < player.MaxLives)
                 {
                     int iLives = player.Lives + Count;
+                    
                     if (iLives > player.MaxLives)
                     {
                         player.Lives = player.MaxLives;

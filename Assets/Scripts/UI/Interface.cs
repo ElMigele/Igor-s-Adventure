@@ -10,6 +10,7 @@ public class Interface : MonoBehaviour {
     public GameObject[] heroes;
     public bool isPaused;
     public Player player;
+    private bool goldGet = false;
     // Use this for initialization
     void Start () {
         heroes[PlayerPrefs.GetInt("h")].SetActive(true);
@@ -48,6 +49,13 @@ public class Interface : MonoBehaviour {
     {
         Time.timeScale = 1;
         SceneManager.LoadScene(1);
+
+        if (!goldGet)
+        {
+            PlayerPrefs.SetInt("coin", PlayerPrefs.GetInt("coin") + player.count);
+            PlayerPrefs.Save();
+            goldGet = true;
+        }
     }
 
     public void OnClickClose()

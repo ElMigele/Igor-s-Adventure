@@ -6,10 +6,12 @@ public class Spawn : MonoBehaviour{
 
     public GameObject item;
     private Transform player;
-    
+
+
     private void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player").transform;
+        player = GameObject.FindGameObjectWithTag("Player").transform;  
+        //player = heroes[PlayerPrefs.GetInt("h")].transform;
     }
     public void SpawnDroppedItem()
     {

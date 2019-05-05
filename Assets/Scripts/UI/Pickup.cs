@@ -6,13 +6,16 @@ public class Pickup : MonoBehaviour
 {
     private Inventory inventory;
     public GameObject itemButton;
-    public GameObject[] heroes;
+
+
     private void Start()
     {
-        inventory = heroes[PlayerPrefs.GetInt("h")].GetComponent<Inventory>();
+        //inventory = heroes[PlayerPrefs.GetInt("h")].GetComponent<Inventory>(); 
+        //inventory = GameObject.FindGameObjectWithTag("Player").GetComponent<Inventory>();
     }
     
     void OnTriggerEnter2D(Collider2D other){
+        inventory = GameObject.FindGameObjectWithTag("Player").GetComponent<Inventory>();
         if (other.CompareTag("Player"))
         {
          for (int i = 0; i < inventory.slots.Length; i++)   
@@ -21,7 +24,8 @@ public class Pickup : MonoBehaviour
               {
              inventory.isFull[i] = true;
              Instantiate(itemButton, inventory.slots[i].transform, false);
-             Destroy(gameObject);
+    
+                    Destroy(gameObject);
              break;
               }
           }
